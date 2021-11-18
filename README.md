@@ -17,15 +17,15 @@
 ```
 cse316-final-frontend
 ├── public/             # static files
+│   ├── images/         # images e.i. default user image
 │   ├── index.html      # html template
 │   ├── manifest.json   # manifest info
 │   └── robots.txt
 │
 ├── src/                # project root
 │   ├── api/            # APIs
-│   ├── assets/         # images e.i. default user image
 │   ├── components/     # basic components e.i. Card, Button, ...
-│   ├── pages/     # pages e.i. Main.jsx, Profile.jsx, ...
+│   ├── pages/          # pages e.i. Main.jsx, Profile.jsx, ...
 │   ├── App.css         # main style sheet
 │   ├── App.js
 │   ├── index.js
