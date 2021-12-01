@@ -1,13 +1,14 @@
 // profile image input
-const SERVER_URL = "https://stark-everglades-14139.herokuapp.com";
-// const SERVER_URL = "http://localhost:5001";
+// const SERVER_URL = "https://stark-everglades-14139.herokuapp.com";
+const SERVER_URL = "http://localhost:5001";
 
 const defaultHeaders = {
 	headers: {
 		"Content-Type": "application/json",
-		withCredentials: true,
+		// withCredentials: true,
 		// crossDomain: true,
 	},
+	credentials: "include",
 };
 
 export const uploadImageToCloudinaryAPI = formData => {

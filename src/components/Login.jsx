@@ -18,7 +18,10 @@ function Login(props) {
 				setError("Password is empty");
 			} else {
 				setError("");
-				loginAPI(email, password).then(res => window.alert(res));
+				loginAPI(email, password).then(res => {
+					console.log(res);
+					if (res === "success") setCurrentPage("logday");
+				});
 			}
 		}
 	};

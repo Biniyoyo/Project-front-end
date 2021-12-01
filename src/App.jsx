@@ -14,7 +14,7 @@ function App() {
 	// States
 
 	const [user, setUser] = useState(null);
-	const [currentPage, setCurrentPage] = useState("login");
+	const [currentPage, setCurrentPage] = useState("");
 	const [profilePic, setProfilePic] = useState("");
 	const [date, setDate] = useState("");
 
@@ -32,6 +32,11 @@ function App() {
 	const getUser = async () => {
 		getUserAPI().then(res => {
 			console.log(res);
+			if (res) {
+				setCurrentPage("logday");
+			} else {
+				setCurrentPage("login");
+			}
 			setUser(res);
 			setProfilePic(res?.image || "/profile.png");
 		});
@@ -43,11 +48,10 @@ function App() {
 	}, []);
 
 	//return
-	console.log(user);
-
+	console.log(currentPage);
 	return (
 		<div>
-			{user && (
+			{user !== null && (
 				<Navbar
 					profilePic={profilePic}
 					currentPage={currentPage}
@@ -77,6 +81,7 @@ function App() {
 					{currentPage === "view" && (
 						<View currentPage={currentPage} />
 					)}
+
 					{currentPage === "login" && (
 						<Login
 							currentPage={currentPage}
