@@ -12,14 +12,17 @@ function Signup(props) {
 
 	const signup = () => {
 		let mail_format = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+		let password_format = /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).{8,}/;
 		if (name.length < 1) {
 			setError("Name is not given");
 		} else {
 			if (!mail_format.test(email)) {
 				setError("Email is invalid");
 			} else {
-				if (password.length <= 6) {
-					setError("Password should be longer than 6 characters");
+				if (!password_format.test(password)) {
+					setError(
+						"Password should have at least 1 lower, 1 upper case and 1 number. Also should be longer than 8 characters."
+					);
 				} else {
 					setError("");
 					registerAPI(name, email, password).then(res => {

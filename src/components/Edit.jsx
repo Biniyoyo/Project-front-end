@@ -24,6 +24,7 @@ function Edit(props) {
 				deleteQuestionByIdAPI(q?._id);
 			}
 		});
+		window.alert("Saved!");
 		window.location.reload();
 	};
 
@@ -62,6 +63,8 @@ function Edit(props) {
 					? {
 							...q,
 							questionType: e.currentTarget.value,
+							multipleChoice: ["", "", ""],
+							responses: {},
 							status: q?.status || "editted",
 					  }
 					: q

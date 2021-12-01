@@ -134,6 +134,7 @@ function Logday(props) {
 		<>
 			<div className="top-div">
 				<ArrowBackIosOutlinedIcon
+					style={{ cursor: "pointer" }}
 					fontSize="smaller"
 					onClick={() => incrementDate(date, -1)}
 				/>
@@ -141,6 +142,7 @@ function Logday(props) {
 				<ArrowForwardIosOutlinedIcon
 					style={{
 						visibility: date === getToday() ? "hidden" : "visible",
+						cursor: "pointer",
 					}}
 					fontSize="smaller"
 					onClick={() => incrementDate(date, 1)}

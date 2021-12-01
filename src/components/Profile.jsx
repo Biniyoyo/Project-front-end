@@ -16,6 +16,7 @@ function Profile(props) {
 		userName: "",
 	});
 	const [image, setImage] = useState(null);
+	const [error, setError] = useState("");
 
 	const handleImageSelected = event => {
 		if (event.target.files && event.target.files[0]) {
@@ -42,26 +43,37 @@ function Profile(props) {
 	};
 
 	const submit = () => {
-		if (image) {
-			const formData = new FormData();
-			const unsignedUploadPreset = "g53pwqfw";
-			formData.append("file", image);
-			formData.append("upload_preset", unsignedUploadPreset);
-
-			uploadImageToCloudinaryAPI(formData).then(response => {
-				console.log("Upload success");
-				updateUserAPI({ ...edittingUser, image: response.url }).then(
-					res => {
-						setUser({ ...edittingUser, image: response.url });
-						window.alert("Saved!");
-					}
-				);
-			});
+		let mail_format = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+		if (!mail_format.test(edittingUser?.email)) {
+			setError("email");
 		} else {
-			updateUserAPI({ ...edittingUser }).then(res => {
-				setUser({ ...edittingUser });
-				window.alert("Saved!");
-			});
+			if (edittingUser?.userName.length < 1) {
+				setError("name");
+			} else {
+				setError("");
+				if (image) {
+					const formData = new FormData();
+					const unsignedUploadPreset = "g53pwqfw";
+					formData.append("file", image);
+					formData.append("upload_preset", unsignedUploadPreset);
+
+					uploadImageToCloudinaryAPI(formData).then(response => {
+						console.log("Upload success");
+						updateUserAPI({
+							...edittingUser,
+							image: response.url,
+						}).then(res => {
+							setUser({ ...edittingUser, image: response.url });
+							window.alert("Saved!");
+						});
+					});
+				} else {
+					updateUserAPI({ ...edittingUser }).then(res => {
+						setUser({ ...edittingUser });
+						window.alert("Saved!");
+					});
+				}
+			}
 		}
 	};
 
@@ -132,6 +144,10 @@ function Profile(props) {
 						})
 					}
 				/>
+
+				<div className="error">
+					{error === "name" && "User name is required"}
+				</div>
 			</div>
 			<div className="profile-block">
 				<h4 style={{ fontWeight: 900, margin: 0 }}>Email</h4>
@@ -139,8 +155,16 @@ function Profile(props) {
 					className="profile-input"
 					placeholder="Email"
 					value={edittingUser?.email}
-					readOnly
+					onChange={e =>
+						setEdittingUser({
+							...edittingUser,
+							email: e.currentTarget.value,
+						})
+					}
 				/>
+				<div className="error">
+					{error === "email" && "Email is invalid"}
+				</div>
 			</div>
 			<div className="profile-block">
 				<h4 style={{ fontWeight: 900, margin: 0 }}>Address</h4>
