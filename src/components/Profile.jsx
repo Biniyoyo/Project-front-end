@@ -1,52 +1,79 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../css/profile.css";
-import { logoutAPI } from "../api/client";
+import {
+	logoutAPI,
+	uploadImageToCloudinaryAPI,
+	updateUserAPI,
+} from "../api/client";
 
 function Profile(props) {
-	const {
-		profilePic,
-		setProfilePic,
-		user,
-		setUser,
-		setCurrentPage,
-		setIsLoggedIn,
-	} = props;
+	const { user, setUser, setCurrentPage } = props;
+	const [edittingUser, setEdittingUser] = useState({
+		address1: "",
+		address2: "",
+		email: "",
+		image: "",
+		userName: "",
+	});
+	const [image, setImage] = useState(null);
+
 	const handleImageSelected = event => {
 		if (event.target.files && event.target.files[0]) {
-			const selectedFile = event.target.files[0];
-
-			const formData = new FormData();
-
-			const unsignedUploadPreset = "ne6rzhzu";
-			formData.append("file", selectedFile);
-			formData.append("upload_preset", unsignedUploadPreset);
-
-			props.uploadImageToCloudinaryAPIMethod(formData).then(response => {
-				console.log("Upload success");
-				setProfilePic(response.url);
+			setImage(event.target.files[0]);
+			setEdittingUser({
+				...edittingUser,
+				image: URL.createObjectURL(event.target.files[0]),
 			});
 		}
 	};
 
 	const removeImage = () => {
-		setProfilePic("/profile.png");
+		setImage(null);
+		setEdittingUser({ ...edittingUser, image: "" });
 	};
 
 	const logout = () => {
 		logoutAPI().then(res => {
 			if (res.status === 204) {
-				setIsLoggedIn(false);
 				setCurrentPage("login");
+				setUser(null);
 			}
 		});
 	};
+
+	const submit = () => {
+		if (image) {
+			const formData = new FormData();
+			const unsignedUploadPreset = "g53pwqfw";
+			formData.append("file", image);
+			formData.append("upload_preset", unsignedUploadPreset);
+
+			uploadImageToCloudinaryAPI(formData).then(response => {
+				console.log("Upload success");
+				updateUserAPI({ ...edittingUser, image: response.url }).then(
+					res => {
+						setUser({ ...edittingUser, image: response.url });
+						window.alert("Saved!");
+					}
+				);
+			});
+		} else {
+			updateUserAPI({ ...edittingUser }).then(res => {
+				setUser({ ...edittingUser });
+				window.alert("Saved!");
+			});
+		}
+	};
+
+	useEffect(() => {
+		setEdittingUser(user);
+	}, []);
 
 	return (
 		<>
 			<h3 style={{ fontWeight: 900, padding: "10px", margin: 0 }}>
 				Edit Profile
 			</h3>
-
 			<div className="profile-block">
 				<h4 style={{ fontWeight: 900, margin: 0 }}>Profile photo</h4>
 				<div
@@ -55,6 +82,8 @@ function Profile(props) {
 						alignItems: "center",
 						justifyContent: "space-between",
 						maxWidth: "22rem",
+						marginLeft: "2%",
+						marginTop: "5px",
 					}}
 				>
 					<label>
@@ -68,7 +97,7 @@ function Profile(props) {
 						/>
 						<img
 							className="profileImage"
-							src={user?.image || "/profile.png"}
+							src={edittingUser?.image || "/profile.png"}
 							alt={"profile"}
 						/>
 					</label>
@@ -90,13 +119,18 @@ function Profile(props) {
 					</div>
 				</div>
 			</div>
-
 			<div className="profile-block">
 				<h4 style={{ fontWeight: 900, margin: 0 }}>Name</h4>
 				<input
 					className="profile-input"
 					placeholder="Name"
-					value={user.userName}
+					value={edittingUser?.userName}
+					onChange={e =>
+						setEdittingUser({
+							...edittingUser,
+							userName: e.currentTarget.value,
+						})
+					}
 				/>
 			</div>
 			<div className="profile-block">
@@ -104,7 +138,8 @@ function Profile(props) {
 				<input
 					className="profile-input"
 					placeholder="Email"
-					value={user.email}
+					value={edittingUser?.email}
+					readOnly
 				/>
 			</div>
 			<div className="profile-block">
@@ -112,16 +147,27 @@ function Profile(props) {
 				<input
 					className="profile-input"
 					placeholder="Address1"
-					value={user.address1}
+					value={edittingUser?.address1}
+					onChange={e =>
+						setEdittingUser({
+							...edittingUser,
+							address1: e.currentTarget.value,
+						})
+					}
 				/>
 
 				<input
 					className="profile-input"
 					placeholder="Address2"
-					value={user.address2}
+					value={edittingUser?.address2}
+					onChange={e =>
+						setEdittingUser({
+							...edittingUser,
+							address2: e.currentTarget.value,
+						})
+					}
 				/>
 			</div>
-
 			<div
 				style={{
 					display: "flex",
@@ -129,7 +175,9 @@ function Profile(props) {
 					justifyContent: "space-between",
 				}}
 			>
-				<button className="save-button">Save</button>
+				<button className="save-button" onClick={submit}>
+					Save
+				</button>
 				<div className="logout" onClick={logout}>
 					Logout
 				</div>

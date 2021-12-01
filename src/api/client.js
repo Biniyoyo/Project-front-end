@@ -35,14 +35,15 @@ export const getUserAPI = () => {
 	});
 };
 
-export const updateUserAPI = (userName, address1, address2) => {
+export const updateUserAPI = user => {
 	return fetch(`${SERVER_URL}/api/user`, {
 		...defaultHeaders,
 		method: "PUT",
 		body: JSON.stringify({
-			userName: userName,
-			address1: address1,
-			address2: address2,
+			userName: user?.userName,
+			address1: user?.address1,
+			address2: user?.address2,
+			image: user?.image,
 		}),
 	}).then(checkStatus);
 };
@@ -99,7 +100,7 @@ export const getQuestionsAPI = () => {
 };
 
 export const createQuestionAPI = question => {
-	return fetch(`/api/questions`, {
+	return fetch(`${SERVER_URL}/api/questions`, {
 		...defaultHeaders,
 		method: "POST",
 		body: JSON.stringify(question),

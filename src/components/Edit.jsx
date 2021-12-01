@@ -11,17 +11,19 @@ import {
 function Edit(props) {
 	const { questions } = props;
 	const [edittingQuestions, setEdittingQuestions] = useState([]);
-	// deletedQuestions: array of deleted question's _id
-	const [deletedQuestions, setDeletedQuestions] = useState([]);
-	// edittedQuestions: array of editted question's { q._id: q } (using object for uniqueness)
-	const [edittedQuestions, setEdittedQuestions] = useState({});
-	// addedQuestions: array of added question objects
-	const [addedQuestions, setAddedQuestions] = useState([]);
+	// status tag => ["new", "editted", "deleted"]
 
 	const save = () => {
-		deletedQuestions.forEach(qid => deleteQuestionByIdAPI(qid));
-		Object.values(edittedQuestions).forEach(q => updateQuestionAPI(q));
-		addedQuestions.forEach(q => createQuestionAPI(q));
+		// TODO: edittingQuetions에서 status tag 확인해서 체크
+		edittingQuestions.forEach(q => {
+			if (q?.status === "new") {
+				createQuestionAPI(q);
+			} else if (q?.status === "editted") {
+				updateQuestionAPI(q);
+			} else if (q?.status === "deleted") {
+				deleteQuestionByIdAPI(q?._id);
+			}
+		});
 		window.location.reload();
 	};
 
@@ -29,113 +31,73 @@ function Edit(props) {
 		const newQuestion = {
 			questionType: "text",
 			questionText: "",
-			multipleChoice: [],
+			multipleChoice: ["", "", ""],
 			createdDate: new Date(),
 			responses: {},
+			status: "new",
 		};
 		setEdittingQuestions([newQuestion, ...edittingQuestions]);
-		setAddedQuestions([newQuestion, ...addedQuestions]);
 	};
 
 	//TODO: For editting, first search for addedQuestions first.
 
-	const editQuestionText = (e, q) => {
-		const targetQuestion = edittingQuestions.filter(
-			item => item._id === q._id
-		)[0];
-
-		const newQuestion = {
-			...targetQuestion,
-			questionText: e.currentTarget.value,
-		};
-
+	const editQuestionText = (e, idx) => {
 		setEdittingQuestions(
-			edittingQuestions.map(item =>
-				item._id === q._id ? newQuestion : item
+			edittingQuestions.map((q, i) =>
+				i === idx
+					? {
+							...q,
+							questionText: e.currentTarget.value,
+							status: q?.status || "editted",
+					  }
+					: q
 			)
 		);
-		let newObj = {};
-		newObj[q._id] = newQuestion;
-		setEdittedQuestions({
-			...edittedQuestions,
-			...newObj,
-		});
 	};
 
-	const editQuestionType = (e, q) => {
-		const targetQuestion = edittingQuestions.filter(
-			item => item._id === q._id
-		)[0];
-
-		const newQuestion = {
-			...targetQuestion,
-			questionType: e.currentTarget.value,
-		};
-
+	const editQuestionType = (e, idx) => {
 		setEdittingQuestions(
-			edittingQuestions.map(item =>
-				item._id === q._id ? newQuestion : item
+			edittingQuestions.map((q, i) =>
+				i === idx
+					? {
+							...q,
+							questionType: e.currentTarget.value,
+							status: q?.status || "editted",
+					  }
+					: q
 			)
 		);
-		let newObj = {};
-		newObj[q._id] = newQuestion;
-		setEdittedQuestions({
-			...edittedQuestions,
-			...newObj,
-		});
 	};
 
-	const deleteQuestion = q => {
-		if (addedQuestions.filter(item => q._id === item._id).length > 0) {
-			setAddedQuestions(
-				addedQuestions.filter(item => q._id !== item._id)
+	const deleteQuestion = (qid, idx) => {
+		if (qid) {
+			setEdittingQuestions(
+				edittingQuestions.map((q, i) =>
+					i === idx ? { ...q, status: "deleted" } : q
+				)
 			);
 		} else {
-			setDeletedQuestions([...deletedQuestions, q._id]);
+			setEdittingQuestions(edittingQuestions.filter((q, i) => i !== idx));
 		}
-		setEdittingQuestions(
-			edittingQuestions.filter(item => item._id !== q._id)
-		);
 	};
 
-	const editQuestionMultipleChoice = (e, q, idx) => {
-		console.log(deletedQuestions);
-		console.log(edittedQuestions);
-		console.log(addedQuestions);
-		const targetQuestion = edittingQuestions.filter(
-			item => item._id === q._id
-		)[0];
-
-		const newQuestion = {
-			...targetQuestion,
-			multipleChoice: targetQuestion.multipleChoice.map((choice, i) =>
-				idx === i ? e.currentTarget.value : choice
-			),
-		};
-
+	const editQuestionMultipleChoice = (e, multIdx, idx) => {
 		setEdittingQuestions(
-			edittingQuestions.map(item =>
-				item._id === q._id
+			edittingQuestions.map((q, i) =>
+				i === idx
 					? {
-							...item,
-							multipleChoice: item.multipleChoice.map(
-								(choice, i) =>
-									idx === i ? e.currentTarget.value : choice
+							...q,
+							status: q?.status || "editted",
+							multipleChoice: q.multipleChoice.map((choice, n) =>
+								n === multIdx ? e.currentTarget.value : choice
 							),
 					  }
-					: item
+					: q
 			)
 		);
-		let newObj = {};
-		newObj[q._id] = newQuestion;
-		setEdittedQuestions({
-			...edittedQuestions,
-			...newObj,
-		});
 	};
 
 	useEffect(() => {
-		setEdittedQuestions([]);
 		if (questions.length > 0) {
 			setEdittingQuestions(questions);
 		}
@@ -162,15 +124,25 @@ function Edit(props) {
 					style={{ cursor: "pointer" }}
 				/>
 			</div>
+			{edittingQuestions.length > 0 || (
+				<div style={{ textAlign: "center" }}>
+					<b>Start with adding new questions!</b>
+				</div>
+			)}
 
 			{edittingQuestions.map((q, idx) => (
 				<div key={`edit${idx}`}>
-					<div className="middle">
+					<div
+						className="middle"
+						style={{
+							display: q?.status === "deleted" ? "none" : "block",
+						}}
+					>
 						<input
 							value={q?.questionText}
 							type="text"
 							className="question-input"
-							onChange={e => editQuestionText(e, q)}
+							onChange={e => editQuestionText(e, idx)}
 						/>
 						<div
 							style={{
@@ -182,7 +154,7 @@ function Edit(props) {
 							<select
 								className="select"
 								value={q.questionType}
-								onChange={e => editQuestionType(e, q)}
+								onChange={e => editQuestionType(e, idx)}
 							>
 								<option value="number">number</option>
 								<option value="text">text</option>
@@ -193,12 +165,12 @@ function Edit(props) {
 							</select>
 							<DeleteOutlineIcon
 								className="delete"
-								onClick={() => deleteQuestion(q)}
+								onClick={() => deleteQuestion(q?._id, idx)}
 								style={{ cursor: "pointer" }}
 							/>
 						</div>
 						{q.questionType === "multiple" &&
-							[...Array(3)].map((n, idx) => (
+							[...Array(3)].map((n, i) => (
 								<div
 									style={{
 										fontWeight: 400,
@@ -206,22 +178,22 @@ function Edit(props) {
 										marginTop: "15px",
 										fontSize: "medium",
 									}}
-									key={`${q._id}mult${idx}`}
+									key={`edit${idx}mult${i}`}
 								>
 									<input
-										// id={`${q._id}multiple${idx}`}
 										type="radio"
-										name={q._id}
+										name={q?._id}
 										disabled
 									/>
 
 									<input
 										className="smallInput"
-										value={q?.multipleChoice[idx]}
+										value={q?.multipleChoice[i]}
 										onChange={e =>
 											editQuestionMultipleChoice(
 												e,
-												q,
+
+												i,
 												idx
 											)
 										}
@@ -231,11 +203,13 @@ function Edit(props) {
 					</div>
 				</div>
 			))}
-			<div className="down">
-				<button className="save-button" onClick={save}>
-					Save
-				</button>
-			</div>
+			{edittingQuestions.length > 0 && (
+				<div className="down">
+					<button className="save-button" onClick={save}>
+						Save
+					</button>
+				</div>
+			)}
 		</>
 	);
 }

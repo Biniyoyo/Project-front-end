@@ -15,9 +15,7 @@ function App() {
 
 	const [user, setUser] = useState(null);
 	const [currentPage, setCurrentPage] = useState("");
-	const [profilePic, setProfilePic] = useState("");
 	const [date, setDate] = useState("");
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [questions, setQuestions] = useState([]);
 
 	//current date format
@@ -36,11 +34,10 @@ function App() {
 			console.log(res);
 			setUser(res);
 			if (res) {
-				setIsLoggedIn(true);
 				setCurrentPage("logday");
+
 				getQuestions();
 			} else {
-				setIsLoggedIn(false);
 				setCurrentPage("login");
 			}
 		});
@@ -60,7 +57,7 @@ function App() {
 
 	return (
 		<div>
-			{isLoggedIn && (
+			{user && (
 				<Navbar
 					profilePic={user?.image || "/profile.png"}
 					currentPage={currentPage}
@@ -76,16 +73,14 @@ function App() {
 							setDate={setDate}
 							getToday={getToday}
 							questions={questions}
+							setQuestions={setQuestions}
 						/>
 					)}
 					{currentPage === "profile" && (
 						<Profile
-							profilePic={profilePic}
-							setProfilePic={setProfilePic}
 							user={user}
 							setUser={setUser}
 							setCurrentPage={setCurrentPage}
-							setIsLoggedIn={setIsLoggedIn}
 						/>
 					)}
 					{currentPage === "edit" && <Edit questions={questions} />}

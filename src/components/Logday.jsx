@@ -3,9 +3,10 @@ import { useState, useEffect } from "react";
 import "../css/logday.css";
 import ArrowBackIosOutlinedIcon from "@mui/icons-material/ArrowBackIosOutlined";
 import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
+import { updateQuestionAPI } from "../api/client";
 
 function Logday(props) {
-	const { date, setDate, getToday, questions } = props;
+	const { date, setDate, getToday, questions, setQuestions } = props;
 	const [edittingQuestions, setEdittingQuestions] = useState([]);
 	const [edittedQuestions, setEdittedQuestions] = useState([]);
 
@@ -25,42 +26,50 @@ function Logday(props) {
 	};
 
 	const editResponse = (q, newResponse) => {
-		const newResponses = { ...q.responses };
+		const newResponses = { ...q?.responses };
 		newResponses[date] = newResponse;
 		const newQuestion = { ...q, responses: newResponses };
 		setEdittingQuestions(
 			edittingQuestions.map(item =>
-				item._id === q._id ? newQuestion : item
+				item?._id === q?._id ? newQuestion : item
 			)
 		);
-		setEdittedQuestions([...edittedQuestions, newQuestion]);
+		const newObj = { ...edittedQuestions };
+		newObj[q?._id] = newQuestion;
+		setEdittedQuestions(newObj);
+	};
+
+	const submit = () => {
+		Object.values(edittedQuestions).forEach(q => updateQuestionAPI(q));
+		setQuestions(edittingQuestions);
+		window.alert(`Your response on ${date} is submitted!`);
 	};
 
 	const questionRendering = q => {
-		switch (q.questionType) {
+		switch (q?.questionType) {
 			case "boolean":
 				return (
 					<>
 						<div className="radio-div">
 							<input
 								type="radio"
-								name={q._id}
-								id={`${q._id}boolean-t`}
+								name={q?._id}
+								id={`${q?._id}boolean-t`}
 								value={true}
 								checked={q.responses[date] === true}
 								onChange={() => editResponse(q, true)}
 							/>
-							<label htmlFor={`${q._id}boolean-t`}>True</label>
+							<label htmlFor={`${q?._id}boolean-t`}>True</label>
 							<span style={{ margin: "20px" }}></span>
 							<input
 								type="radio"
-								name={q._id}
-								id={`${q._id}boolean-f`}
+								name={q?._id}
+								id={`${q?._id}boolean-f`}
 								value={false}
 								checked={q.responses[date] === false}
 								onChange={() => editResponse(q, false)}
 							/>
-							<label htmlFor={`${q._id}boolean-f`}>False</label>
+							<label htmlFor={`${q?._id}boolean-f`}>False</label>
 						</div>
 					</>
 				);
@@ -86,9 +95,9 @@ function Logday(props) {
 				);
 
 			case "multiple":
-				return q.multipleChoice.map((choice, idx) => (
+				return q?.multipleChoice.map((choice, idx) => (
 					<div
-						key={`${q._id}mult${idx}`}
+						key={`${q?._id}mult${idx}`}
 						style={{
 							display: "flex",
 							alignContent: "center",
@@ -99,14 +108,14 @@ function Logday(props) {
 						}}
 					>
 						<input
-							id={`${q._id}multiple${idx}`}
+							id={`${q?._id}multiple${idx}`}
 							type="radio"
-							name={q._id}
+							name={q?._id}
 							value={idx}
-							checked={q.responses[date] === idx}
+							checked={q?.responses[date] == idx}
 							onChange={e => editResponse(q, idx)}
 						/>
-						<label htmlFor={`${q._id}multiple${idx}`}>
+						<label htmlFor={`${q?._id}multiple${idx}`}>
 							{choice}
 						</label>
 					</div>
@@ -118,7 +127,6 @@ function Logday(props) {
 
 	useEffect(() => {
 		setEdittedQuestions([]);
-
 		setEdittingQuestions(questions);
 	}, [date, questions]);
 
@@ -143,16 +151,20 @@ function Logday(props) {
 				<>
 					{edittingQuestions.map((q, idx) => (
 						<div className="middle" key={`logday${idx}`}>
-							<div className="in">{q.questionText}</div>
+							<div className="in">{q?.questionText}</div>
 							{questionRendering(q)}
 						</div>
 					))}
 					<div className="down">
-						<button className="save-button">Submit</button>
+						<button className="save-button" onClick={submit}>
+							Submit
+						</button>
 					</div>
 				</>
 			) : (
-				<div>No Questions</div>
+				<div style={{ textAlign: "center" }}>
+					<b>Start with adding new questions!</b>
+				</div>
 			)}
 		</>
 	);

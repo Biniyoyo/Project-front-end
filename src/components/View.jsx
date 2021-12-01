@@ -59,7 +59,7 @@ function View(props) {
 				questionText: "What is your favorite color?",
 				multipleChoice: ["Red", "Green", "Blue"],
 				createdDate: new Date(),
-				responses: { "11/27/2021":0},
+				responses: { "11/27/2021": 0 },
 			},
 			{
 				_id: 0,
@@ -80,7 +80,7 @@ function View(props) {
 				multipleChoice: [],
 				createdDate: new Date(),
 				responses: { "11/29/2021": "Kimchi" },
-			}
+			},
 		];
 		setQuestions(newQuestions);
 	};
@@ -102,7 +102,7 @@ function View(props) {
 			questionText: "What is your favorite color?",
 			multipleChoice: ["Red", "Green", "Blue"],
 			createdDate: new Date(),
-			responses: { "11/27/2021":0, "11/28/2021":1},	
+			responses: { "11/27/2021": 0, "11/28/2021": 1 },
 		},
 		{
 			_id: 3,
@@ -112,8 +112,8 @@ function View(props) {
 			questionText: "Where India is located?",
 			multipleChoice: ["Asia", "N.America", "S.America"],
 			createdDate: new Date(),
-			responses: { "11/27/2021":0},
-		}
+			responses: { "11/27/2021": 0 },
+		},
 	];
 
 	const dataForBool = [
@@ -138,7 +138,7 @@ function View(props) {
 			multipleChoice: [],
 			createdDate: new Date(),
 			responses: { "11/28/2021": true },
-		}
+		},
 	];
 
 	const dataForNumber = [
@@ -166,7 +166,7 @@ function View(props) {
 			multipleChoice: [],
 			createdDate: new Date(),
 			responses: { "11/27/2021": 2019 },
-		}
+		},
 	];
 	const dataForText = [
 		{
@@ -187,12 +187,16 @@ function View(props) {
 			questionText: "Korean food you like?",
 			multipleChoice: [],
 			createdDate: new Date(),
-			responses: { "11/29/2021": "Kimchi", "11/30/2021": "Kimbab", "11/31/2021": "Bibimbab"},
-		}
+			responses: {
+				"11/29/2021": "Kimchi",
+				"11/30/2021": "Kimbab",
+				"11/31/2021": "Bibimbab",
+			},
+		},
 	];
 
-	const COLORS = ['#0088FE', '#FF8042'];
-	
+	const COLORS = ["#0088FE", "#FF8042"];
+
 	useEffect(() => {
 		getQuestions();
 	}, []);
@@ -206,7 +210,7 @@ function View(props) {
 
 				for (const r of Object.keys(q.responses)) {
 					if (r === 0) {
-						response1=89;
+						response1 = 89;
 					}
 					if (r === 1) {
 						response2++;
@@ -215,7 +219,6 @@ function View(props) {
 						response3++;
 					}
 				}
-				
 			}
 			if (q.questionType === "bool" && !dataForBool.includes(q)) {
 				dataForBool.push(q);
@@ -225,7 +228,9 @@ function View(props) {
 			}
 			if (q.questionType === "text" && !dataForText.includes(q)) {
 				dataForText.push(q);
-				dataForText.sort((a,b)=>{return a.createdDate-b.createdDate});
+				dataForText.sort((a, b) => {
+					return a.createdDate - b.createdDate;
+				});
 				console.log(dataForText);
 			}
 		});
@@ -233,25 +238,27 @@ function View(props) {
 
 	return (
 		<div className="viewData">
-
 			<div className="textData">
-				{dataForText.map((q)=>(
-					<><div>{q.questionText}</div>
-					<br />
-					{Object.keys(q.responses).map((d)=>(
-						<>
-						<div className="dateBlock">{d}:</div>
-						<div className="responseBlock">{q.responses[d]}</div>
+				{dataForText.map(q => (
+					<>
+						<div>{q.questionText}</div>
 						<br />
-						</>
-					))}
-					<br />
-					</> 
+						{Object.keys(q.responses).map(d => (
+							<>
+								<div className="dateBlock">{d}:</div>
+								<div className="responseBlock">
+									{q.responses[d]}
+								</div>
+								<br />
+							</>
+						))}
+						<br />
+					</>
 				))}
 			</div>
 
 			<div className="bar">
-				{dataForMultiple.map((q)=>(
+				{dataForMultiple.map(q => (
 					<>
 						<p>{q.questionText}</p>
 						<div width="100%" height="100%">
@@ -271,9 +278,18 @@ function View(props) {
 								<YAxis />
 								<Tooltip />
 								<Legend />
-								<Bar dataKey={q.multipleChoice[0]} fill="#8884d8" />
-								<Bar dataKey={q.multipleChoice[1]} fill="#82ca9d" />
-								<Bar dataKey={q.multipleChoice[2]} fill="skyblue" />
+								<Bar
+									dataKey={q.multipleChoice[0]}
+									fill="#8884d8"
+								/>
+								<Bar
+									dataKey={q.multipleChoice[1]}
+									fill="#82ca9d"
+								/>
+								<Bar
+									dataKey={q.multipleChoice[2]}
+									fill="skyblue"
+								/>
 							</BarChart>
 						</div>
 					</>
@@ -281,7 +297,7 @@ function View(props) {
 			</div>
 
 			<div className="line">
-				{dataForNumber.map((q)=>(
+				{dataForNumber.map(q => (
 					<>
 						<div width="100%" height="100%">
 							<p>{q.questionText}</p>
@@ -289,7 +305,12 @@ function View(props) {
 								width={500}
 								height={300}
 								data={dataForNumber}
-								margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+								margin={{
+									top: 5,
+									right: 30,
+									left: 20,
+									bottom: 5,
+								}}
 							>
 								<CartesianGrid strokeDasharray="3 3" />
 								<XAxis dataKey="name" />
@@ -302,16 +323,15 @@ function View(props) {
 									stroke="#8884d8"
 									activeDot={{ r: 8 }}
 								/>
-								
 							</LineChart>
 						</div>
 					</>
 				))}
 			</div>
 
-				<div className="pie">
-					{dataForBool.map((q)=>(
-						<>
+			<div className="pie">
+				{dataForBool.map(q => (
+					<>
 						<div width="100%" height="100%">
 							<p>{q.questionText}</p>
 							<PieChart width={400} height={400}>
@@ -325,14 +345,17 @@ function View(props) {
 									dataKey="value"
 								>
 									{dataForBool.map((entry, index) => (
-									<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+										<Cell
+											key={`cell-${index}`}
+											fill={COLORS[index % COLORS.length]}
+										/>
 									))}
 								</Pie>
-								<Legend/>
+								<Legend />
 							</PieChart>
 						</div>
-						</>
-					))}
+					</>
+				))}
 			</div>
 		</div>
 	);
