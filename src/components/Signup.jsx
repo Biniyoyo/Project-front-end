@@ -4,16 +4,13 @@ import { useState } from "react";
 import { registerAPI } from "../api/client";
 
 function Signup(props) {
-	const { setCurrentPage } = props;
+	const { setCurrentPage, getUser } = props;
 	const [error, setError] = useState("");
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
 	const signup = () => {
-		//temporary: to be changed
-		// setCurrentPage("logday");
-
 		let mail_format = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 		if (name.length < 1) {
 			setError("Name is not given");
@@ -25,9 +22,11 @@ function Signup(props) {
 					setError("Password is not given");
 				} else {
 					setError("");
-					registerAPI(name, email, password).then(res =>
-						console.log(res)
-					);
+					registerAPI(name, email, password).then(res => {
+						if (res === "success") {
+							getUser();
+						}
+					});
 				}
 			}
 		}

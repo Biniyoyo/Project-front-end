@@ -8,7 +8,7 @@ import Edit from "./components/Edit";
 import Profile from "./components/Profile";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import { getUserAPI } from "./api/client";
+import { getUserAPI, getQuestionsAPI } from "./api/client";
 
 function App() {
 	// States
@@ -17,6 +17,8 @@ function App() {
 	const [currentPage, setCurrentPage] = useState("");
 	const [profilePic, setProfilePic] = useState("");
 	const [date, setDate] = useState("");
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [questions, setQuestions] = useState([]);
 
 	//current date format
 
@@ -32,13 +34,22 @@ function App() {
 	const getUser = async () => {
 		getUserAPI().then(res => {
 			console.log(res);
+			setUser(res);
 			if (res) {
+				setIsLoggedIn(true);
 				setCurrentPage("logday");
+				getQuestions();
 			} else {
+				setIsLoggedIn(false);
 				setCurrentPage("login");
 			}
-			setUser(res);
-			setProfilePic(res?.image || "/profile.png");
+		});
+	};
+
+	const getQuestions = async () => {
+		getQuestionsAPI().then(newQuestions => {
+			console.log(newQuestions);
+			setQuestions(newQuestions);
 		});
 	};
 
@@ -47,13 +58,11 @@ function App() {
 		setDate(getToday());
 	}, []);
 
-	//return
-	console.log(currentPage);
 	return (
 		<div>
-			{user !== null && (
+			{isLoggedIn && (
 				<Navbar
-					profilePic={profilePic}
+					profilePic={user?.image || "/profile.png"}
 					currentPage={currentPage}
 					setCurrentPage={setCurrentPage}
 				/>
@@ -66,6 +75,7 @@ function App() {
 							date={date}
 							setDate={setDate}
 							getToday={getToday}
+							questions={questions}
 						/>
 					)}
 					{currentPage === "profile" && (
@@ -75,9 +85,10 @@ function App() {
 							user={user}
 							setUser={setUser}
 							setCurrentPage={setCurrentPage}
+							setIsLoggedIn={setIsLoggedIn}
 						/>
 					)}
-					{currentPage === "edit" && <Edit />}
+					{currentPage === "edit" && <Edit questions={questions} />}
 					{currentPage === "view" && (
 						<View currentPage={currentPage} />
 					)}
@@ -86,12 +97,14 @@ function App() {
 						<Login
 							currentPage={currentPage}
 							setCurrentPage={setCurrentPage}
+							getUser={getUser}
 						/>
 					)}
 					{currentPage === "signup" && (
 						<Signup
 							currentPage={currentPage}
 							setCurrentPage={setCurrentPage}
+							getUser={getUser}
 						/>
 					)}
 				</div>

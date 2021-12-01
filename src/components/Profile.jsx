@@ -1,8 +1,16 @@
 import React from "react";
 import "../css/profile.css";
+import { logoutAPI } from "../api/client";
 
 function Profile(props) {
-	const { profilePic, setProfilePic, user, setUser } = props;
+	const {
+		profilePic,
+		setProfilePic,
+		user,
+		setUser,
+		setCurrentPage,
+		setIsLoggedIn,
+	} = props;
 	const handleImageSelected = event => {
 		if (event.target.files && event.target.files[0]) {
 			const selectedFile = event.target.files[0];
@@ -24,9 +32,14 @@ function Profile(props) {
 		setProfilePic("/profile.png");
 	};
 
-	const logoutButton = ()=>{
-		props.setCurrentPage("login");
-	}
+	const logout = () => {
+		logoutAPI().then(res => {
+			if (res.status === 204) {
+				setIsLoggedIn(false);
+				setCurrentPage("login");
+			}
+		});
+	};
 
 	return (
 		<>
@@ -55,7 +68,7 @@ function Profile(props) {
 						/>
 						<img
 							className="profileImage"
-							src={user.image || "/profile.png"}
+							src={user?.image || "/profile.png"}
 							alt={"profile"}
 						/>
 					</label>
@@ -117,10 +130,9 @@ function Profile(props) {
 				}}
 			>
 				<button className="save-button">Save</button>
-				<div 
-					className="logout"
-					onClick = {logoutButton}
-				>Logout</div>
+				<div className="logout" onClick={logout}>
+					Logout
+				</div>
 			</div>
 		</>
 	);

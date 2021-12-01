@@ -2,10 +2,15 @@ import React, { useState, useEffect } from "react";
 import "../css/edit.css";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import {
+	createQuestionAPI,
+	updateQuestionAPI,
+	deleteQuestionByIdAPI,
+} from "../api/client";
 
 function Edit(props) {
-	const {} = props;
-	const [questions, setQuestions] = useState([]);
+	const { questions } = props;
+	const [edittingQuestions, setEdittingQuestions] = useState([]);
 	// deletedQuestions: array of deleted question's _id
 	const [deletedQuestions, setDeletedQuestions] = useState([]);
 	// edittedQuestions: array of editted question's { q._id: q } (using object for uniqueness)
@@ -13,33 +18,44 @@ function Edit(props) {
 	// addedQuestions: array of added question objects
 	const [addedQuestions, setAddedQuestions] = useState([]);
 
+	const save = () => {
+		deletedQuestions.forEach(qid => deleteQuestionByIdAPI(qid));
+		Object.values(edittedQuestions).forEach(q => updateQuestionAPI(q));
+		addedQuestions.forEach(q => createQuestionAPI(q));
+		window.location.reload();
+	};
+
 	const addQuestion = () => {
 		const newQuestion = {
-			_id: questions.length,
-			creator: "",
 			questionType: "text",
 			questionText: "",
 			multipleChoice: [],
 			createdDate: new Date(),
 			responses: {},
 		};
-		setQuestions([...questions, newQuestion]);
-		setAddedQuestions([...addedQuestions, newQuestion]);
+		setEdittingQuestions([newQuestion, ...edittingQuestions]);
+		setAddedQuestions([newQuestion, ...addedQuestions]);
 	};
 
+	//TODO: For editting, first search for addedQuestions first.
+
 	const editQuestionText = (e, q) => {
-		setQuestions(
-			questions.map(item =>
-				item._id === q._id
-					? {
-							...item,
-							questionText: e.currentTarget.value,
-					  }
-					: item
+		const targetQuestion = edittingQuestions.filter(
+			item => item._id === q._id
+		)[0];
+
+		const newQuestion = {
+			...targetQuestion,
+			questionText: e.currentTarget.value,
+		};
+
+		setEdittingQuestions(
+			edittingQuestions.map(item =>
+				item._id === q._id ? newQuestion : item
 			)
 		);
 		let newObj = {};
-		newObj[q._id] = q;
+		newObj[q._id] = newQuestion;
 		setEdittedQuestions({
 			...edittedQuestions,
 			...newObj,
@@ -47,18 +63,22 @@ function Edit(props) {
 	};
 
 	const editQuestionType = (e, q) => {
-		setQuestions(
-			questions.map(item =>
-				item._id === q._id
-					? {
-							...item,
-							questionType: e.currentTarget.value,
-					  }
-					: item
+		const targetQuestion = edittingQuestions.filter(
+			item => item._id === q._id
+		)[0];
+
+		const newQuestion = {
+			...targetQuestion,
+			questionType: e.currentTarget.value,
+		};
+
+		setEdittingQuestions(
+			edittingQuestions.map(item =>
+				item._id === q._id ? newQuestion : item
 			)
 		);
 		let newObj = {};
-		newObj[q._id] = q;
+		newObj[q._id] = newQuestion;
 		setEdittedQuestions({
 			...edittedQuestions,
 			...newObj,
@@ -73,15 +93,28 @@ function Edit(props) {
 		} else {
 			setDeletedQuestions([...deletedQuestions, q._id]);
 		}
-		setQuestions(questions.filter(item => item._id !== q._id));
+		setEdittingQuestions(
+			edittingQuestions.filter(item => item._id !== q._id)
+		);
 	};
 
 	const editQuestionMultipleChoice = (e, q, idx) => {
 		console.log(deletedQuestions);
 		console.log(edittedQuestions);
 		console.log(addedQuestions);
-		setQuestions(
-			questions.map(item =>
+		const targetQuestion = edittingQuestions.filter(
+			item => item._id === q._id
+		)[0];
+
+		const newQuestion = {
+			...targetQuestion,
+			multipleChoice: targetQuestion.multipleChoice.map((choice, i) =>
+				idx === i ? e.currentTarget.value : choice
+			),
+		};
+
+		setEdittingQuestions(
+			edittingQuestions.map(item =>
 				item._id === q._id
 					? {
 							...item,
@@ -94,61 +127,18 @@ function Edit(props) {
 			)
 		);
 		let newObj = {};
-		newObj[q._id] = q;
+		newObj[q._id] = newQuestion;
 		setEdittedQuestions({
 			...edittedQuestions,
 			...newObj,
 		});
 	};
 
-	const getQuestions = async () => {
-		const newQuestions = [
-			{
-				_id: 0,
-				creator: "",
-				createdDate: "",
-				questionType: "text",
-				questionText: "What is your name?",
-				multipleChoice: [],
-				createdDate: new Date(),
-				responses: {},
-			},
-			{
-				_id: 1,
-				creator: "",
-				createdDate: "",
-				questionType: "number",
-				questionText: "How old are you?",
-				multipleChoice: [],
-				createdDate: new Date(),
-				responses: {},
-			},
-			{
-				_id: 2,
-				creator: "",
-				createdDate: "",
-				questionType: "boolean",
-				questionText: "Did you do your assignments?",
-				multipleChoice: [],
-				createdDate: new Date(),
-				responses: {},
-			},
-			{
-				_id: 3,
-				creator: "",
-				createdDate: "",
-				questionType: "multiple",
-				questionText: "What is your favorite color?",
-				multipleChoice: ["Red", "Green", "Blue"],
-				createdDate: new Date(),
-				responses: {},
-			},
-		];
-		setQuestions(newQuestions);
-	};
-
 	useEffect(() => {
-		getQuestions();
+		setEdittedQuestions([]);
+		if (questions.length > 0) {
+			setEdittingQuestions(questions);
+		}
 	}, []);
 
 	return (
@@ -173,7 +163,7 @@ function Edit(props) {
 				/>
 			</div>
 
-			{questions.map((q, idx) => (
+			{edittingQuestions.map((q, idx) => (
 				<div key={`edit${idx}`}>
 					<div className="middle">
 						<input
@@ -242,7 +232,9 @@ function Edit(props) {
 				</div>
 			))}
 			<div className="down">
-				<button className="save-button">Save</button>
+				<button className="save-button" onClick={save}>
+					Save
+				</button>
 			</div>
 		</>
 	);

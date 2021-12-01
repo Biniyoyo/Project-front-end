@@ -5,8 +5,7 @@ import ArrowBackIosOutlinedIcon from "@mui/icons-material/ArrowBackIosOutlined";
 import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
 
 function Logday(props) {
-	const { date, setDate, getToday } = props;
-	const [questions, setQuestions] = useState([]);
+	const { date, setDate, getToday, questions } = props;
 	const [edittingQuestions, setEdittingQuestions] = useState([]);
 	const [edittedQuestions, setEdittedQuestions] = useState([]);
 
@@ -117,63 +116,11 @@ function Logday(props) {
 		}
 	};
 
-	const getQuestions = async () => {
-		const newQuestions = [
-			{
-				_id: 0,
-				creator: "",
-				createdDate: "",
-				questionType: "text",
-				questionText: "What is your name?",
-				multipleChoice: [],
-				createdDate: new Date(),
-				responses: { "11/27/2021": "Kyungbae Min" },
-			},
-			{
-				_id: 1,
-				creator: "",
-				createdDate: "",
-				questionType: "number",
-				questionText: "How old are you?",
-				multipleChoice: [],
-				createdDate: new Date(),
-				responses: { "11/27/2021": 22 },
-			},
-			{
-				_id: 2,
-				creator: "",
-				createdDate: "",
-				questionType: "boolean",
-				questionText: "Did you do your assignments?",
-				multipleChoice: [],
-				createdDate: new Date(),
-				responses: { "11/27/2021": true },
-			},
-			{
-				_id: 3,
-				creator: "",
-				createdDate: "",
-				questionType: "multiple",
-				questionText: "What is your favorite color?",
-				multipleChoice: ["Red", "Green", "Blue"],
-				createdDate: new Date(),
-				responses: { "11/27/2021": 0 },
-			},
-		];
-		setQuestions(newQuestions);
-		setEdittingQuestions(newQuestions);
-	};
-
-	useEffect(() => {
-		getQuestions();
-	}, []);
-
 	useEffect(() => {
 		setEdittedQuestions([]);
-		if (questions.length > 0) {
-			setEdittingQuestions([...questions]);
-		}
-	}, [date]);
+
+		setEdittingQuestions(questions);
+	}, [date, questions]);
 
 	return (
 		<>
@@ -184,23 +131,29 @@ function Logday(props) {
 				/>
 				<h2>{date}</h2>
 				<ArrowForwardIosOutlinedIcon
+					style={{
+						visibility: date === getToday() ? "hidden" : "visible",
+					}}
 					fontSize="smaller"
-					onClick={() =>
-						date === getToday() ? {} : incrementDate(date, 1)
-					}
+					onClick={() => incrementDate(date, 1)}
 				/>
 			</div>
 
-			{edittingQuestions.map((q, idx) => (
-				<div className="middle" key={`logday${idx}`}>
-					<div className="in">{q.questionText}</div>
-					{questionRendering(q)}
-				</div>
-			))}
-
-			<div className="down">
-				<button className="save-button">Submit</button>
-			</div>
+			{edittingQuestions.length > 0 ? (
+				<>
+					{edittingQuestions.map((q, idx) => (
+						<div className="middle" key={`logday${idx}`}>
+							<div className="in">{q.questionText}</div>
+							{questionRendering(q)}
+						</div>
+					))}
+					<div className="down">
+						<button className="save-button">Submit</button>
+					</div>
+				</>
+			) : (
+				<div>No Questions</div>
+			)}
 		</>
 	);
 }

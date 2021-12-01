@@ -3,7 +3,7 @@ import { loginAPI } from "../api/client";
 import { useState } from "react";
 
 function Login(props) {
-	const { currentPage, setCurrentPage } = props;
+	const { currentPage, setCurrentPage, getUser } = props;
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
@@ -20,7 +20,9 @@ function Login(props) {
 				setError("");
 				loginAPI(email, password).then(res => {
 					console.log(res);
-					if (res === "success") setCurrentPage("logday");
+					if (res === "success") {
+						getUser();
+					}
 				});
 			}
 		}
