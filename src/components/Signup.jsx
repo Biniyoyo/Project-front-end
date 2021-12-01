@@ -18,8 +18,8 @@ function Signup(props) {
 			if (!mail_format.test(email)) {
 				setError("Email is invalid");
 			} else {
-				if (password.length < 1) {
-					setError("Password is not given");
+				if (password.length <= 6) {
+					setError("Password should be longer than 6 characters");
 				} else {
 					setError("");
 					registerAPI(name, email, password).then(res => {
