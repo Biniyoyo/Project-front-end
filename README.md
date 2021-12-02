@@ -12,6 +12,12 @@
 
 -   `yarn build`
 
+## Demo
+
+-   Demo account
+    -   email: demo@demo.com
+    -   password: Demo1234
+
 ## Structure
 
 ```

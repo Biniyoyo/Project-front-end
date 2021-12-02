@@ -85,7 +85,7 @@ function App() {
 					)}
 					{currentPage === "edit" && <Edit questions={questions} />}
 					{currentPage === "view" && (
-						<View currentPage={currentPage} />
+						<View questions={questions} user={user} />
 					)}
 
 					{currentPage === "login" && (

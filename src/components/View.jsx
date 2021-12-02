@@ -13,11 +13,13 @@ import {
 	Legend,
 	Cell,
 } from "recharts";
+import { CSVLink, CSVDownload } from "react-csv";
 import "../css/view.css";
 import { useEffect, useState, useCallback } from "react";
+import { configure } from "@testing-library/dom";
 
 function View(props) {
-	const [questions, setQuestions] = useState([]);
+	const { questions, user } = props;
 	const getQuestions = async () => {
 		// This part is dummy data. I'll change to http fetch function later.
 		const newQuestions = [
@@ -82,7 +84,7 @@ function View(props) {
 				responses: { "11/29/2021": "Kimchi" },
 			},
 		];
-		setQuestions(newQuestions);
+		// setQuestions(newQuestions);
 	};
 
 	//temporary objects to catagorize questions
@@ -197,6 +199,49 @@ function View(props) {
 
 	const COLORS = ["#0088FE", "#FF8042"];
 
+	const sortByDate = arr => {
+		return arr.sort(function (a, b) {
+			return new Date(b) - new Date(a);
+		});
+	};
+
+	const csvDownloadButton = () => {
+		let data = [];
+		const headers = [
+			{ label: "date", key: "date" },
+			{ label: "createdDate", key: "createdDate" },
+			{ label: "question", key: "question" },
+			{ label: "type", key: "type" },
+			{ label: "mult1", key: "mult1" },
+			{ label: "mult2", key: "mult2" },
+			{ label: "mult3", key: "mult3" },
+			{ label: "response", key: "response" },
+		];
+		questions.forEach(question =>
+			sortByDate(Object.keys(question?.responses)).forEach(response =>
+				data.push({
+					date: response,
+					createdDate: question.createdDate,
+					question: question.questionText,
+					type: question.questionType,
+					mult1: question.multipleChoice[0],
+					mult2: question.multipleChoice[1],
+					mult3: question.multipleChoice[2],
+					response: question?.responses[response],
+				})
+			)
+		);
+		return (
+			<CSVLink
+				headers={headers}
+				data={data}
+				filename={`logday_export_${user?._id}.csv`}
+			>
+				Export
+			</CSVLink>
+		);
+	};
+
 	useEffect(() => {
 		getQuestions();
 	}, []);
@@ -238,6 +283,7 @@ function View(props) {
 
 	return (
 		<div className="viewData">
+			{csvDownloadButton()}
 			<div className="textData">
 				{dataForText.map(q => (
 					<>

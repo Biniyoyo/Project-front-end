@@ -44,7 +44,7 @@ export const updateUserAPI = user => {
 			address1: user?.address1,
 			address2: user?.address2,
 			image: user?.image,
-			image: user?.email,
+			email: user?.email,
 		}),
 	}).then(checkStatus);
 };
