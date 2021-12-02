@@ -8,7 +8,6 @@ const defaultHeaders = {
 		"Content-Type": "application/json",
 	},
 	credentials: "include",
-	crossDomain: true,
 };
 
 export const uploadImageToCloudinaryAPI = formData => {
