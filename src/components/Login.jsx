@@ -29,7 +29,7 @@ function Login(props) {
 	};
 
 	return (
-		<div className="login-layout">
+		<div className="login-layout" data-testid="login">
 			<div className="board">
 				<div className="loginHead">
 					<h2 style={{ margin: 0, color: "white" }}>Log Day</h2>
