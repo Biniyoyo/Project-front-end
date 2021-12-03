@@ -87,104 +87,6 @@ function View(props) {
 		// setQuestions(newQuestions);
 	};
 
-	//will be removed (temporary) after http fetch 
-	const tempQuestionList = [
-		{
-			_id: 0,
-			creator: "",
-			createdDate: "",
-			questionType: "text",
-			questionText: "What is your name?",
-			multipleChoice: [],
-			createdDate: new Date(),
-			responses: { "11/27/2021": "Kyungbae Min" },
-		},
-		{
-			_id: 1,
-			creator: "",
-			createdDate: "",
-			questionType: "number",
-			questionText: "How old are you?",
-			multipleChoice: [],
-			createdDate: new Date(),
-			responses: { "11/27/2021": 22, "11/28/2021": 21,"11/29/2021": 25,"11/30/2021": 23 },
-		},
-		{
-			_id: 2,
-			creator: "",
-			createdDate: "",
-			questionType: "boolean",
-			questionText: "Did you do your assignments?",
-			multipleChoice: [],
-			createdDate: new Date(),
-			responses: { "11/27/2021": true, "11/28/2021": false, "11/29/2021": false },
-		},
-		{
-			_id: 3,
-			creator: "",
-			createdDate: "",
-			questionType: "multiple",
-			questionText: "What is your favorite color?",
-			multipleChoice: ["Red", "Green", "Blue"],
-			createdDate: new Date(),
-			responses: { "11/27/2021": 0, "11/28/2021": 1, "11/29/2021": 1  },
-		},
-		{
-			_id: 0,
-			creator: "",
-			createdDate: "",
-			questionType: "text",
-			questionText: "What is your major?",
-			multipleChoice: [],
-			createdDate: new Date(),
-			responses: { "11/30/2021": "Major: Ams & Minor: CSE" },
-		},
-		{
-			_id: 0,
-			creator: "",
-			createdDate: "",
-			questionType: "text",
-			questionText: "Korean food you like?",
-			multipleChoice: [],
-			createdDate: new Date(),
-			responses: { "11/29/2021": "Kimchi" },
-		},
-		{
-			_id: 1,
-			creator: "",
-			createdDate: "",
-			questionType: "number",
-			questionText: "What is your admission year?",
-			multipleChoice: [],
-			createdDate: new Date(),
-			responses: { "11/27/2021": 2019, "11/28/2021": 202 },
-		},
-		{
-			_id: 0,
-			creator: "",
-			createdDate: "",
-			questionType: "text",
-			questionText: "What is your major?",
-			multipleChoice: [],
-			createdDate: new Date(),
-			responses: { "11/30/2021": "Major: Ams & Minor: CSE" },
-		},
-		{
-			_id: 0,
-			creator: "",
-			createdDate: "",
-			questionType: "text",
-			questionText: "Korean food you like?",
-			multipleChoice: [],
-			createdDate: new Date(),
-			responses: {
-				"11/29/2021": "Kimchi",
-				"11/30/2021": "Kimbab",
-				"11/31/2021": "Bibimbab",
-			},
-		},
-	];
-
 	const COLORS = ["#0088FE", "#FF8042"];
 
 	const sortByDate = arr => {
@@ -253,7 +155,7 @@ function View(props) {
 		const dataForBool = [];
 		const dataForNumber = [];
 		const dataForText = [];
-		tempQuestionList.forEach(q => {
+		questions.forEach(q => {
 			var arr = [];
 			if (q.questionType === "multiple") {
 				var response1 = 0;
