@@ -23,6 +23,7 @@ function Login(props) {
 					console.log(res);
 					if (res === "success") {
 						getUser();
+						window.alert("Welcome!");
 					} else {
 						setError("Entered information is wrong");
 						setIsFetching(false);

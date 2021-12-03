@@ -30,6 +30,7 @@ function Signup(props) {
 					registerAPI(name, email, password).then(res => {
 						if (res === "success") {
 							getUser();
+							window.alert("Welcome!");
 						} else if (res === "duplicated") {
 							setError("User email is already registered");
 							setIsFetching(false);
