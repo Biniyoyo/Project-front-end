@@ -9,6 +9,7 @@ function Signup(props) {
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [isFetching, setIsFetching] = useState(false);
 
 	const signup = () => {
 		let mail_format = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -25,9 +26,13 @@ function Signup(props) {
 					);
 				} else {
 					setError("");
+					setIsFetching(true);
 					registerAPI(name, email, password).then(res => {
 						if (res === "success") {
 							getUser();
+						} else if ("duplicated") {
+							setError("User email is already registered");
+							setIsFetching(false);
 						}
 					});
 				}
@@ -83,8 +88,11 @@ function Signup(props) {
 						<br style={{ size: "10px" }} />
 
 						<div className="signup-buttons">
-							<button className="login-button" onClick={signup}>
-								Sign Up
+							<button
+								className="login-button"
+								onClick={isFetching ? () => {} : signup}
+							>
+								{isFetching ? "Wait..." : "Sign Up"}
 							</button>
 						</div>
 					</div>

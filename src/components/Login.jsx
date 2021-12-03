@@ -3,13 +3,13 @@ import { loginAPI } from "../api/client";
 import { useState } from "react";
 
 function Login(props) {
-	const { currentPage, setCurrentPage, getUser } = props;
+	const { setCurrentPage, getUser } = props;
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
+	const [isFetching, setIsFetching] = useState(false);
 
 	const login = () => {
-		//temporary: to be changed
 		let mail_format = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 		if (!mail_format.test(email)) {
 			setError("Email is invalid");
@@ -18,10 +18,14 @@ function Login(props) {
 				setError("Password is empty");
 			} else {
 				setError("");
+				setIsFetching(true);
 				loginAPI(email, password).then(res => {
 					console.log(res);
 					if (res === "success") {
 						getUser();
+					} else {
+						setError("Entered information is wrong");
+						setIsFetching(false);
 					}
 				});
 			}
@@ -54,8 +58,11 @@ function Login(props) {
 						<div className="error">{error}</div>
 					</div>
 					<div className="loginButtons">
-						<button className="login-button" onClick={login}>
-							Log In
+						<button
+							className="login-button"
+							onClick={isFetching ? () => {} : login}
+						>
+							{isFetching ? "Wait..." : "Log In"}
 						</button>
 						<hr style={{ width: "inherit" }} />
 						<button

@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import "./App.css";
+import BeatLoader from "react-spinners/BeatLoader";
 import Navbar from "./components/Navbar";
 import Logday from "./components/Logday";
 import View from "./components/View";
@@ -35,7 +36,6 @@ function App() {
 			setUser(res);
 			if (res) {
 				setCurrentPage("logday");
-
 				getQuestions();
 			} else {
 				setCurrentPage("login");
@@ -67,6 +67,21 @@ function App() {
 
 			<div style={{ display: "flex", justifyContent: "center" }}>
 				<div className="main">
+					{currentPage === "" && (
+						<div
+							style={{
+								display: "flex",
+								justifyContent: "center",
+								marginTop: "30vh",
+							}}
+						>
+							<BeatLoader
+								size={10}
+								margin={2}
+								color={"#66bfbf"}
+							/>
+						</div>
+					)}
 					{currentPage === "logday" && (
 						<Logday
 							date={date}
@@ -87,10 +102,8 @@ function App() {
 					{currentPage === "view" && (
 						<View questions={questions} user={user} />
 					)}
-
 					{currentPage === "login" && (
 						<Login
-							currentPage={currentPage}
 							setCurrentPage={setCurrentPage}
 							getUser={getUser}
 						/>
