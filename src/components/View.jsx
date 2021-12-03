@@ -107,7 +107,7 @@ function View(props) {
 			questionText: "How old are you?",
 			multipleChoice: [],
 			createdDate: new Date(),
-			responses: { "11/27/2021": 22 },
+			responses: { "11/27/2021": 22, "11/28/2021": 21,"11/29/2021": 25,"11/30/2021": 23 },
 		},
 		{
 			_id: 2,
@@ -154,16 +154,6 @@ function View(props) {
 			creator: "",
 			createdDate: "",
 			questionType: "number",
-			questionText: "How old are you?",
-			multipleChoice: [],
-			createdDate: new Date(),
-			responses: { "11/27/2021": 22 },
-		},
-		{
-			_id: 1,
-			creator: "",
-			createdDate: "",
-			questionType: "number",
 			questionText: "What is your admission year?",
 			multipleChoice: [],
 			createdDate: new Date(),
@@ -193,54 +183,6 @@ function View(props) {
 				"11/31/2021": "Bibimbab",
 			},
 		},
-	];
-
-	//temporary objects to catagorize questions
-
-	const dataForMultiple = [
-		// {
-		// 	questionText: "demo",
-		// 	response1: 2,
-		// 	response2: 3,
-		// 	response3: 4,
-		// },
-		
-	];
-
-	const dataForBool = [
-		
-		// [
-		// 	{ 
-		// 		name: 'True', 
-		// 		value: 43,
-		// 	},
-		// 	{ 
-		// 		name: 'False', 
-		// 		value: 43,
-		// 	},
-		// 	"what is your name?",	
-		// ],
-		
-	];
-
-	const dataForNumber = [
-		// [
-		// 	{ 
-		// 		name: 'Date1', 
-		// 		value: 3,
-		// 		text: "hello"
-		// 	},
-		// 	{ 
-		// 		name: 'Date2', 
-		// 		value: 4,
-		// 		text: "hello"
-		// 	},
-				
-		// ],
-		
-	];
-	const dataForText = [
-		//original question
 	];
 
 	const COLORS = ["#0088FE", "#FF8042"];
@@ -292,7 +234,11 @@ function View(props) {
 		getQuestions();
 	}, []);
 
-	useEffect(() => {
+	const viewQuestion = ()=> {
+		const dataForMultiple = [];
+		const dataForBool = [];
+		const dataForNumber = [];
+		const dataForText = [];
 		tempQuestionList.forEach(q => {
 			if (q.questionType === "multiple") {
 				var response1 = 0;
@@ -365,12 +311,8 @@ function View(props) {
 				});
 			}
 		});
-	}, [questions, props.currentPage]);
-
-	return (
-		<div className="viewData">
-			{csvDownloadButton()}
-			<div className="textData">
+		return (
+				<><div className="textData" key="textData">
 				{dataForText.map(q => (
 					<>
 						<div>{q.questionText}</div>
@@ -388,110 +330,110 @@ function View(props) {
 					</>
 				))}
 			</div>
-
-			<div className="bar">
-				{dataForMultiple.map(q => (
-					<>
-						<p>{q.questionText}</p>
-						<div width="100%" height="100%">
-							<BarChart
-								width={500}
-								height={300}
-								data={dataForMultiple}
-								margin={{
-									top: 5,
-									right: 30,
-									left: 20,
-									bottom: 5,
-								}}
-							>
-								<CartesianGrid strokeDasharray="3 3" />
-								<XAxis dataKey="name" />
-								<YAxis />
-								<Tooltip />
-								<Legend />
-								<Bar
-									dataKey={"response1"}
-									fill="#8884d8"
-								/>
-								<Bar
-									dataKey={"response2"}
-									//dataKey={q.multipleChoice[1]}
-									fill="#82ca9d"
-								/>
-								<Bar
-									dataKey={"response3"}
-									//dataKey={q.multipleChoice[2]}
-									fill="skyblue"
-								/>
-							</BarChart>
-						</div>
-					</>
-				))}
-			</div>
-
-			<div className="line">
-				{dataForNumber.map(q => (
-					<>
-						<div width="100%" height="100%">
-							<p>{q[1].text}</p>
-							<LineChart
-								width={500}
-								height={300}
-								data={q}
-								margin={{
-									top: 5,
-									right: 30,
-									left: 20,
-									bottom: 5,
-								}}
-							>
-								<CartesianGrid strokeDasharray="3 3" />
-								<XAxis dataKey="name" />
-								<YAxis />
-								<Tooltip />
-								<Legend />
-								<Line
-									type="monotone"
-									dataKey="value"
-									stroke="#8884d8"
-								/>
-							</LineChart>
-						</div>
-					</>
-				))}
-			</div>
-
-			<div className="pie">
-				{dataForBool.map(q => (
-					<>
-						<div width="100%" height="100%">
-							<p>{q[2]}</p>
-							<PieChart width={400} height={400}>
-								<Pie
-									data={q}
-									cx="50%"
-									cy="50%"
-									labelLine={false}
-									label={"true"}
-									outerRadius={80}
-									fill="#8884d8"
-									dataKey="value"
+			<div className="bar" key = "bar">
+					{dataForMultiple.map(q => (
+						<>
+							<p>{q.questionText}</p>
+							<div width="100%" height="100%" key = {q.questionText}>
+								<BarChart
+									width={500}
+									height={300}
+									data={dataForMultiple}
+									margin={{
+										top: 5,
+										right: 30,
+										left: 20,
+										bottom: 5,
+									}}
 								>
-									{q.map((entry, index) => (
-										<>
-										<Cell
-											key={`cell-${index}`}
-											fill={COLORS[index % COLORS.length]} />
-										</>
-									))}
-								</Pie>
-								<Legend />
-							</PieChart>
-						</div>
-					</>
-				))}
-			</div>
+									<CartesianGrid strokeDasharray="3 3" />
+									<XAxis dataKey="name" />
+									<YAxis />
+									<Tooltip />
+									<Legend />
+									<Bar
+										dataKey={"response1"}
+										fill="#8884d8" />
+									<Bar
+										dataKey={"response2"}
+										//dataKey={q.multipleChoice[1]}
+										fill="#82ca9d" />
+									<Bar
+										dataKey={"response3"}
+										//dataKey={q.multipleChoice[2]}
+										fill="skyblue" />
+								</BarChart>
+							</div>
+						</>
+					))}
+				</div>
+				<div className="line" key = "line">
+					{dataForNumber.map(q => (
+						//<>
+							<div width="100%" height="100%" key = {q.text}>
+								<p>{q[0].text}</p>
+								<LineChart
+									width={500}
+									height={300}
+									data={q}
+									margin={{
+										top: 5,
+										right: 30,
+										left: 20,
+										bottom: 5,
+									}}
+								>
+									<CartesianGrid strokeDasharray="3 3" />
+									<XAxis dataKey="name" />
+									<YAxis />
+									<Tooltip />
+									<Line
+										type="monotone"
+										dataKey="value"
+										stroke="#8884d8" />
+								</LineChart>
+							</div>
+						//</>
+					))}
+				</div>
+				<div className="pie" key = "pie">
+					{dataForBool.map(q => (
+						<>
+							<div width="100%" height="100%" key = {q.value}>
+								<p>{q[2]}</p>
+								<PieChart width={400} height={400}>
+									<Pie
+										data={q}
+										cx="50%"
+										cy="50%"
+										labelLine={false}
+										label={"true"}
+										outerRadius={80}
+										fill="#8884d8"
+										dataKey="value"
+									>
+										{q.map((entry, index) => (
+											<>
+												<Cell
+													key={`cell-${index}`}
+													fill={COLORS[index % COLORS.length]} />
+											</>
+										))}
+									</Pie>
+									<Legend />
+								</PieChart>
+							</div>
+						</>
+					))}
+				</div></>
+		);
+		
+	};
+
+	return (
+		<div className="viewData">
+			{csvDownloadButton()}
+			{viewQuestion()}
 		</div>
 	);
 }
