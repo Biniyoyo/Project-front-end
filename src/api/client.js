@@ -58,7 +58,7 @@ export const registerAPI = (userName, email, password) => {
 			password: password,
 		}),
 	}).then(response => {
-		if (response.status >= 500) {
+		if (response.status >= 400) {
 			return "duplicated";
 		}
 		return "success";

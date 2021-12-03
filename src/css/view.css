@@ -1,33 +1,28 @@
-.bar{
-    margin-top: 5%;
-    margin-bottom: 10%;
+.bar {
+	margin-top: 5%;
+	margin-bottom: 10%;
 }
-.viewData{
-    display: inline;
+.viewData {
+	display: inline;
 }
-.textData{
-    background-color: rgba(53, 32, 32, 0.925);
-    padding-bottom: 2%;
-    padding-top: 1%;
-    padding-left: 2%;
-    padding-right: 2%;
-    margin-top: 5%;
-    overflow: scroll;
-    border-radius: 10px;
-    height: 150px;
-    font-family:'Times New Roman', Times, serif;
-    color:white;
-    
+.textData {
+	margin-top: 15px;
+	overflow-y: auto;
+	border-radius: 5px;
+	max-height: 200px;
+	overflow-wrap: anywhere;
 }
-.dateBlock{
-    float: left;
-    border: none;
+
+.responseBlock {
+	display: flex;
+	border: solid 1px darkgray;
+	border-radius: 5px;
+	padding: 10px;
+	align-content: center;
+	margin-bottom: 10px;
 }
-.responseBlock{
-    border: solid 0.5px;
-    margin-left: 15%;
-    border-radius: 5px;
-}
-.export{
-    font-family: 'Times New Roman', Times, serif;
+
+.export {
+	/* font-family: "Times New Roman", Times, serif; */
+	color: black;
 }

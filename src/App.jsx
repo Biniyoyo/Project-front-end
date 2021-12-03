@@ -76,7 +76,7 @@ function App() {
 							}}
 						>
 							<BeatLoader
-								size={10}
+								size={13}
 								margin={2}
 								color={"#66bfbf"}
 							/>

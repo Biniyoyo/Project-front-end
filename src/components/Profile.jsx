@@ -17,6 +17,7 @@ function Profile(props) {
 	});
 	const [image, setImage] = useState(null);
 	const [error, setError] = useState("");
+	const [isFetching, setIsFetching] = useState(false);
 
 	const handleImageSelected = event => {
 		if (event.target.files && event.target.files[0]) {
@@ -51,6 +52,7 @@ function Profile(props) {
 				setError("name");
 			} else {
 				setError("");
+				setIsFetching(true);
 				if (image) {
 					const formData = new FormData();
 					const unsignedUploadPreset = "g53pwqfw";
@@ -64,12 +66,14 @@ function Profile(props) {
 							image: response.url,
 						}).then(res => {
 							setUser({ ...edittingUser, image: response.url });
+							setIsFetching(false);
 							window.alert("Saved!");
 						});
 					});
 				} else {
 					updateUserAPI({ ...edittingUser }).then(res => {
 						setUser({ ...edittingUser });
+						setIsFetching(false);
 						window.alert("Saved!");
 					});
 				}
@@ -83,9 +87,18 @@ function Profile(props) {
 
 	return (
 		<>
-			<h3 style={{ fontWeight: 900, padding: "10px", margin: 0 }}>
-				Edit Profile
-			</h3>
+			<div
+				style={{
+					display: "flex",
+					alignItems: "center",
+					paddingLeft: "5px",
+					paddingRight: "5px",
+					paddingTop: "10px",
+					paddingBottom: "10px",
+				}}
+			>
+				<h3 style={{ fontWeight: 900 }}>Edit Profile</h3>
+			</div>
 			<div className="profile-block">
 				<h4 style={{ fontWeight: 900, margin: 0 }}>Profile photo</h4>
 				<div
@@ -199,8 +212,11 @@ function Profile(props) {
 					justifyContent: "space-between",
 				}}
 			>
-				<button className="save-button" onClick={submit}>
-					Save
+				<button
+					className="save-button"
+					onClick={isFetching ? () => {} : submit}
+				>
+					{isFetching ? "Wait..." : "Save"}
 				</button>
 				<div className="logout" onClick={logout}>
 					Logout
