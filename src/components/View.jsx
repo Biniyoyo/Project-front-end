@@ -263,18 +263,25 @@ function View(props) {
 
 				{csvDownloadButton("Export Data")}
 			</div>
-			{questions.map(question => {
-				switch (question.questionType) {
-					case "text":
-						return textTypeCard(question);
-					case "number":
-						return numberTypeCard(question);
-					case "boolean":
-						return booleanTypeCard(question);
-					case "multiple":
-						return multipleTypeCard(question);
-				}
-			})}
+
+			{questions.length > 0 ? (
+				questions.map(question => {
+					switch (question.questionType) {
+						case "text":
+							return textTypeCard(question);
+						case "number":
+							return numberTypeCard(question);
+						case "boolean":
+							return booleanTypeCard(question);
+						case "multiple":
+							return multipleTypeCard(question);
+					}
+				})
+			) : (
+				<div style={{ textAlign: "center" }}>
+					<b>No Data to Show!</b>
+				</div>
+			)}
 		</div>
 	);
 }
