@@ -210,8 +210,6 @@ function View(props) {
 			{ choice: question.multipleChoice[2], value: thirdCount },
 		];
 
-		console.log(data);
-
 		return (
 			<div className="middle">
 				<div>
@@ -268,13 +266,29 @@ function View(props) {
 				questions.map(question => {
 					switch (question.questionType) {
 						case "text":
-							return textTypeCard(question);
+							return (
+								<div key={`view${question._id}`}>
+									{textTypeCard(question)}
+								</div>
+							);
 						case "number":
-							return numberTypeCard(question);
+							return (
+								<div key={`view${question._id}`}>
+									{numberTypeCard(question)}
+								</div>
+							);
 						case "boolean":
-							return booleanTypeCard(question);
+							return (
+								<div key={`view${question._id}`}>
+									{booleanTypeCard(question)}
+								</div>
+							);
 						case "multiple":
-							return multipleTypeCard(question);
+							return (
+								<div key={`view${question._id}`}>
+									{multipleTypeCard(question)}
+								</div>
+							);
 					}
 				})
 			) : (
