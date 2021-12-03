@@ -35,12 +35,14 @@ function Profile(props) {
 	};
 
 	const logout = () => {
-		logoutAPI().then(res => {
-			if (res.status === 204) {
-				setCurrentPage("login");
-				setUser(null);
-			}
-		});
+		if (window.confirm("Do you want to logout?")) {
+			logoutAPI().then(res => {
+				if (res.status === 204) {
+					setCurrentPage("login");
+					setUser(null);
+				}
+			});
+		}
 	};
 
 	const submit = () => {

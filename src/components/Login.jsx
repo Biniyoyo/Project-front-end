@@ -22,8 +22,8 @@ function Login(props) {
 				loginAPI(email, password).then(res => {
 					console.log(res);
 					if (res === "success") {
-						getUser();
 						window.alert("Welcome!");
+						getUser();
 					} else {
 						setError("Entered information is wrong");
 						setIsFetching(false);
