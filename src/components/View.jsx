@@ -354,7 +354,12 @@ function View(props) {
 	return (
 		<div className="viewData">
 			{csvDownloadButton()}
-			{viewQuestion()}
+			{(questions.length > 0) ?
+				(viewQuestion()):(
+					<div style={{ textAlign: "center" }}>
+						<b>No Data to Show!</b>
+					</div>
+			)}
 		</div>
 	);
 }
