@@ -87,7 +87,7 @@ function View(props) {
 		// setQuestions(newQuestions);
 	};
 
-	//will be removed ( temporary )
+	//will be removed (temporary) after http fetch 
 	const tempQuestionList = [
 		{
 			_id: 0,
@@ -157,7 +157,7 @@ function View(props) {
 			questionText: "What is your admission year?",
 			multipleChoice: [],
 			createdDate: new Date(),
-			responses: { "11/27/2021": 2019 },
+			responses: { "11/27/2021": 2019, "11/28/2021": 202 },
 		},
 		{
 			_id: 0,
@@ -224,6 +224,7 @@ function View(props) {
 				headers={headers}
 				data={data}
 				filename={`logday_export_${user?._id}.csv`}
+				className = "export"
 			>
 				Export
 			</CSVLink>
@@ -340,7 +341,7 @@ function View(props) {
 			}
 		});
 		return (
-				<><div className="textData" key="textData">
+				<><div className="textData">
 				{dataForText.map(q => (
 					<>
 						<div>{q.questionText}</div>
@@ -362,7 +363,7 @@ function View(props) {
 					{dataForMultiple.map(q => (
 						<>
 							<p>{q[0].text}</p>
-							<div width="100%" height="100%" key = {q.questionText}>
+							<div width="100%" height="100%">
 							<BarChart
 								width={500}
 								height={300}
@@ -388,7 +389,7 @@ function View(props) {
 				<div className="line" key = "line">
 					{dataForNumber.map(q => (
 						//<>
-							<div width="100%" height="100%" key = {q.text}>
+							<div width="100%" height="100%">
 								<p>{q[0].text}</p>
 								<LineChart
 									width={500}
@@ -417,7 +418,7 @@ function View(props) {
 				<div className="pie" key = "pie">
 					{dataForBool.map(q => (
 						<>
-							<div width="100%" height="100%" key = {q.value}>
+							<div width="100%" height="100%">
 								<p>{q[0].text}</p>
 								<PieChart width={400} height={400}>
 									<Pie
