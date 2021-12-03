@@ -117,7 +117,7 @@ function View(props) {
 			questionText: "Did you do your assignments?",
 			multipleChoice: [],
 			createdDate: new Date(),
-			responses: { "11/27/2021": true },
+			responses: { "11/27/2021": true, "11/28/2021": false, "11/29/2021": false },
 		},
 		{
 			_id: 3,
@@ -127,7 +127,7 @@ function View(props) {
 			questionText: "What is your favorite color?",
 			multipleChoice: ["Red", "Green", "Blue"],
 			createdDate: new Date(),
-			responses: { "11/27/2021": 0, "11/28/2021": 1  },
+			responses: { "11/27/2021": 0, "11/28/2021": 1, "11/29/2021": 1  },
 		},
 		{
 			_id: 0,
@@ -234,12 +234,26 @@ function View(props) {
 		getQuestions();
 	}, []);
 
+	const RADIAN = Math.PI / 180;
+	const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+		const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+		const x = cx + radius * Math.cos(-midAngle * RADIAN);
+		const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+		return (
+			<text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+			{`${(percent * 100).toFixed(0)}%`}
+			</text>
+		);
+	};
+
 	const viewQuestion = ()=> {
 		const dataForMultiple = [];
 		const dataForBool = [];
 		const dataForNumber = [];
 		const dataForText = [];
 		tempQuestionList.forEach(q => {
+			var arr = [];
 			if (q.questionType === "multiple") {
 				var response1 = 0;
 				var response2 = 0;
@@ -256,13 +270,25 @@ function View(props) {
 						response3++;
 					}
 				}
-				const newQ = {
-					questionText: q.questionText,
-					response1: response1,
-					response2: response2,
-					response3: response3
+				const r1 = {
+					choice:q.multipleChoice[0],
+					value:response1,
+					text:q.questionText
 				}
-				dataForMultiple.push(newQ);
+				const r2 = {
+					choice:q.multipleChoice[1],
+					value:response2,
+					text:q.questionText
+				}
+				const r3 = {
+					choice:q.multipleChoice[2],
+					value:response3,
+					text:q.questionText
+				}
+				arr.push(r1);
+				arr.push(r2);
+				arr.push(r3);
+				dataForMultiple.push(arr);
 			}
 			if (q.questionType === "boolean") {
 				var True = 0;
@@ -275,17 +301,19 @@ function View(props) {
 						False++;
 					}
 				}
+				const sum = True+False;
 				const newQ = 
 				[
 					{ 
 						name: 'True', 
-						value: True,
+						value: Math.round((True*100)/sum),
+						text: q.questionText
 					},
 					{ 
 						name: 'False', 
-						value: False,
+						value: Math.round((False*100)/sum),
+						text: q.questionText
 					},
-					q.questionText,
 				];
 				dataForBool.push(newQ);
 				console.log(dataForBool);
@@ -333,36 +361,26 @@ function View(props) {
 			<div className="bar" key = "bar">
 					{dataForMultiple.map(q => (
 						<>
-							<p>{q.questionText}</p>
+							<p>{q[0].text}</p>
 							<div width="100%" height="100%" key = {q.questionText}>
-								<BarChart
-									width={500}
-									height={300}
-									data={dataForMultiple}
-									margin={{
-										top: 5,
-										right: 30,
-										left: 20,
-										bottom: 5,
-									}}
+							<BarChart
+								width={500}
+								height={300}
+								data={q}
+								margin={{
+									top: 5,
+									right: 30,
+									left: 20,
+									bottom: 5,
+								}}
 								>
-									<CartesianGrid strokeDasharray="3 3" />
-									<XAxis dataKey="name" />
-									<YAxis />
-									<Tooltip />
-									<Legend />
-									<Bar
-										dataKey={"response1"}
-										fill="#8884d8" />
-									<Bar
-										dataKey={"response2"}
-										//dataKey={q.multipleChoice[1]}
-										fill="#82ca9d" />
-									<Bar
-										dataKey={"response3"}
-										//dataKey={q.multipleChoice[2]}
-										fill="skyblue" />
-								</BarChart>
+								<CartesianGrid strokeDasharray="3 3" />
+								<XAxis dataKey="choice" />
+								<YAxis />
+								<Tooltip />
+								<Legend />
+								<Bar dataKey="value" fill="gray" />
+							</BarChart>
 							</div>
 						</>
 					))}
@@ -400,14 +418,14 @@ function View(props) {
 					{dataForBool.map(q => (
 						<>
 							<div width="100%" height="100%" key = {q.value}>
-								<p>{q[2]}</p>
+								<p>{q[0].text}</p>
 								<PieChart width={400} height={400}>
 									<Pie
 										data={q}
 										cx="50%"
 										cy="50%"
 										labelLine={false}
-										label={"true"}
+										label={renderCustomizedLabel}
 										outerRadius={80}
 										fill="#8884d8"
 										dataKey="value"
