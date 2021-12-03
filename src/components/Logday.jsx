@@ -165,7 +165,7 @@ function Logday(props) {
 				</>
 			) : (
 				<div style={{ textAlign: "center" }}>
-					<b>Start with adding new questions!</b>
+					<b>No Data to Show!</b>
 				</div>
 			)}
 		</>
