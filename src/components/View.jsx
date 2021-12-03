@@ -23,7 +23,7 @@ function View(props) {
 		});
 	};
 
-	const csvDownloadButton = text => {
+	const csvDownloadButton = () => {
 		let data = [];
 		const headers = [
 			{ label: "date", key: "date" },
@@ -57,7 +57,7 @@ function View(props) {
 				className="export"
 				onClick={() => {
 					return window.confirm(
-						"Do you want to export the whole data?"
+						"Do you want to export data as .csv file?"
 					);
 				}}
 			>
@@ -259,7 +259,7 @@ function View(props) {
 			>
 				<h3 style={{ fontWeight: 900 }}>View Data</h3>
 
-				{csvDownloadButton("Export Data")}
+				{csvDownloadButton()}
 			</div>
 
 			{questions.length > 0 ? (
