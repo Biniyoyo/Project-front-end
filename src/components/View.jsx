@@ -87,40 +87,28 @@ function View(props) {
 		// setQuestions(newQuestions);
 	};
 
-	//temporary objects to catagorize questions
-
-	const dataForMultiple = [
-		// {
-		// 	name: " ",
-		// 	response1: 2,
-		// 	response2: 3,
-		// 	response3: 4,
-		// },
+	//will be removed ( temporary )
+	const tempQuestionList = [
 		{
-			_id: 3,
+			_id: 0,
 			creator: "",
 			createdDate: "",
-			questionType: "multiple",
-			questionText: "What is your favorite color?",
-			multipleChoice: ["Red", "Green", "Blue"],
+			questionType: "text",
+			questionText: "What is your name?",
+			multipleChoice: [],
 			createdDate: new Date(),
-			responses: { "11/27/2021": 0, "11/28/2021": 1 },
+			responses: { "11/27/2021": "Kyungbae Min" },
 		},
 		{
-			_id: 3,
+			_id: 1,
 			creator: "",
 			createdDate: "",
-			questionType: "multiple",
-			questionText: "Where India is located?",
-			multipleChoice: ["Asia", "N.America", "S.America"],
+			questionType: "number",
+			questionText: "How old are you?",
+			multipleChoice: [],
 			createdDate: new Date(),
-			responses: { "11/27/2021": 0 },
+			responses: { "11/27/2021": 22 },
 		},
-	];
-
-	const dataForBool = [
-		// { name: 'True', value: 400 },
-		// { name: 'False', value: 400 },
 		{
 			_id: 2,
 			creator: "",
@@ -132,23 +120,35 @@ function View(props) {
 			responses: { "11/27/2021": true },
 		},
 		{
-			_id: 2,
+			_id: 3,
 			creator: "",
 			createdDate: "",
-			questionType: "boolean",
-			questionText: "Water is liquid?",
+			questionType: "multiple",
+			questionText: "What is your favorite color?",
+			multipleChoice: ["Red", "Green", "Blue"],
+			createdDate: new Date(),
+			responses: { "11/27/2021": 0, "11/28/2021": 1  },
+		},
+		{
+			_id: 0,
+			creator: "",
+			createdDate: "",
+			questionType: "text",
+			questionText: "What is your major?",
 			multipleChoice: [],
 			createdDate: new Date(),
-			responses: { "11/28/2021": true },
+			responses: { "11/30/2021": "Major: Ams & Minor: CSE" },
 		},
-	];
-
-	const dataForNumber = [
-		// {
-		// 	name: "Question",
-		// 	response: [0,2],
-		// 	response2:2,
-		// },
+		{
+			_id: 0,
+			creator: "",
+			createdDate: "",
+			questionType: "text",
+			questionText: "Korean food you like?",
+			multipleChoice: [],
+			createdDate: new Date(),
+			responses: { "11/29/2021": "Kimchi" },
+		},
 		{
 			_id: 1,
 			creator: "",
@@ -169,8 +169,6 @@ function View(props) {
 			createdDate: new Date(),
 			responses: { "11/27/2021": 2019 },
 		},
-	];
-	const dataForText = [
 		{
 			_id: 0,
 			creator: "",
@@ -195,6 +193,54 @@ function View(props) {
 				"11/31/2021": "Bibimbab",
 			},
 		},
+	];
+
+	//temporary objects to catagorize questions
+
+	const dataForMultiple = [
+		// {
+		// 	questionText: "demo",
+		// 	response1: 2,
+		// 	response2: 3,
+		// 	response3: 4,
+		// },
+		
+	];
+
+	const dataForBool = [
+		
+		// [
+		// 	{ 
+		// 		name: 'True', 
+		// 		value: 43,
+		// 	},
+		// 	{ 
+		// 		name: 'False', 
+		// 		value: 43,
+		// 	},
+		// 	"what is your name?",	
+		// ],
+		
+	];
+
+	const dataForNumber = [
+		// [
+		// 	{ 
+		// 		name: 'Date1', 
+		// 		value: 3,
+		// 		text: "hello"
+		// 	},
+		// 	{ 
+		// 		name: 'Date2', 
+		// 		value: 4,
+		// 		text: "hello"
+		// 	},
+				
+		// ],
+		
+	];
+	const dataForText = [
+		//original question
 	];
 
 	const COLORS = ["#0088FE", "#FF8042"];
@@ -247,36 +293,76 @@ function View(props) {
 	}, []);
 
 	useEffect(() => {
-		questions.forEach(q => {
+		tempQuestionList.forEach(q => {
 			if (q.questionType === "multiple") {
 				var response1 = 0;
 				var response2 = 0;
 				var response3 = 0;
 
 				for (const r of Object.keys(q.responses)) {
-					if (r === 0) {
-						response1 = 89;
+					if (q.responses[r] === 0) {
+						response1++;
 					}
-					if (r === 1) {
+					if (q.responses[r] === 1) {
 						response2++;
 					}
-					if (r === 2) {
+					if (q.responses[r] === 2) {
 						response3++;
 					}
 				}
+				const newQ = {
+					questionText: q.questionText,
+					response1: response1,
+					response2: response2,
+					response3: response3
+				}
+				dataForMultiple.push(newQ);
 			}
-			if (q.questionType === "bool" && !dataForBool.includes(q)) {
-				dataForBool.push(q);
+			if (q.questionType === "boolean") {
+				var True = 0;
+				var False = 0;
+
+				for (const r of Object.keys(q.responses)) {
+					if (q.responses[r]) {
+						True++;
+					}else{
+						False++;
+					}
+				}
+				const newQ = 
+				[
+					{ 
+						name: 'True', 
+						value: True,
+					},
+					{ 
+						name: 'False', 
+						value: False,
+					},
+					q.questionText,
+				];
+				dataForBool.push(newQ);
+				console.log(dataForBool);
 			}
-			if (q.questionType === "number" && !dataForNumber.includes(q)) {
-				dataForNumber.push(q);
+			if (q.questionType === "number") {
+				var arr = [];
+				for (const r of Object.keys(q.responses)) {
+					const point = {
+									name: r,
+									value: q.responses[r],
+									text: q.questionText
+							     }
+					arr.push(point);
+
+				}
+				dataForNumber.push(arr);
+				console.log(dataForNumber);
 			}
 			if (q.questionType === "text" && !dataForText.includes(q)) {
 				dataForText.push(q);
 				dataForText.sort((a, b) => {
 					return a.createdDate - b.createdDate;
 				});
-				console.log(dataForText);
 			}
 		});
 	}, [questions, props.currentPage]);
@@ -325,15 +411,17 @@ function View(props) {
 								<Tooltip />
 								<Legend />
 								<Bar
-									dataKey={q.multipleChoice[0]}
+									dataKey={"response1"}
 									fill="#8884d8"
 								/>
 								<Bar
-									dataKey={q.multipleChoice[1]}
+									dataKey={"response2"}
+									//dataKey={q.multipleChoice[1]}
 									fill="#82ca9d"
 								/>
 								<Bar
-									dataKey={q.multipleChoice[2]}
+									dataKey={"response3"}
+									//dataKey={q.multipleChoice[2]}
 									fill="skyblue"
 								/>
 							</BarChart>
@@ -346,11 +434,11 @@ function View(props) {
 				{dataForNumber.map(q => (
 					<>
 						<div width="100%" height="100%">
-							<p>{q.questionText}</p>
+							<p>{q[1].text}</p>
 							<LineChart
 								width={500}
 								height={300}
-								data={dataForNumber}
+								data={q}
 								margin={{
 									top: 5,
 									right: 30,
@@ -365,9 +453,8 @@ function View(props) {
 								<Legend />
 								<Line
 									type="monotone"
-									dataKey="response"
+									dataKey="value"
 									stroke="#8884d8"
-									activeDot={{ r: 8 }}
 								/>
 							</LineChart>
 						</div>
@@ -379,22 +466,24 @@ function View(props) {
 				{dataForBool.map(q => (
 					<>
 						<div width="100%" height="100%">
-							<p>{q.questionText}</p>
+							<p>{q[2]}</p>
 							<PieChart width={400} height={400}>
 								<Pie
-									data={dataForBool}
+									data={q}
 									cx="50%"
 									cy="50%"
 									labelLine={false}
+									label={"true"}
 									outerRadius={80}
 									fill="#8884d8"
 									dataKey="value"
 								>
-									{dataForBool.map((entry, index) => (
+									{q.map((entry, index) => (
+										<>
 										<Cell
 											key={`cell-${index}`}
-											fill={COLORS[index % COLORS.length]}
-										/>
+											fill={COLORS[index % COLORS.length]} />
+										</>
 									))}
 								</Pie>
 								<Legend />
