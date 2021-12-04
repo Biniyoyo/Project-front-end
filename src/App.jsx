@@ -18,7 +18,6 @@ function App() {
 	const [currentPage, setCurrentPage] = useState("");
 	const [date, setDate] = useState("");
 	const [questions, setQuestions] = useState([]);
-	const [isFetching, setIsFetching] = useState(false);
 
 	//current date format
 
@@ -45,11 +44,9 @@ function App() {
 	};
 
 	const getQuestions = async () => {
-		setIsFetching(true);
 		getQuestionsAPI().then(newQuestions => {
 			console.log(newQuestions);
 			setQuestions(newQuestions);
-			setIsFetching(false);
 		});
 	};
 
@@ -70,12 +67,12 @@ function App() {
 
 			<div style={{ display: "flex", justifyContent: "center" }}>
 				<div className="main">
-					{(currentPage === "" || isFetching) && (
+					{currentPage === "" && (
 						<div
 							style={{
 								display: "flex",
 								justifyContent: "center",
-								marginTop: "40vh",
+								marginTop: "30vh",
 							}}
 						>
 							<BeatLoader
@@ -85,44 +82,38 @@ function App() {
 							/>
 						</div>
 					)}
-					{isFetching || (
-						<>
-							{currentPage === "logday" && (
-								<Logday
-									date={date}
-									setDate={setDate}
-									getToday={getToday}
-									questions={questions}
-									setQuestions={setQuestions}
-								/>
-							)}
-							{currentPage === "profile" && (
-								<Profile
-									user={user}
-									setUser={setUser}
-									setCurrentPage={setCurrentPage}
-								/>
-							)}
-							{currentPage === "edit" && (
-								<Edit questions={questions} />
-							)}
-							{currentPage === "view" && (
-								<View questions={questions} user={user} />
-							)}
-							{currentPage === "login" && (
-								<Login
-									setCurrentPage={setCurrentPage}
-									getUser={getUser}
-								/>
-							)}
-							{currentPage === "signup" && (
-								<Signup
-									currentPage={currentPage}
-									setCurrentPage={setCurrentPage}
-									getUser={getUser}
-								/>
-							)}
-						</>
+					{currentPage === "logday" && (
+						<Logday
+							date={date}
+							setDate={setDate}
+							getToday={getToday}
+							questions={questions}
+							setQuestions={setQuestions}
+						/>
+					)}
+					{currentPage === "profile" && (
+						<Profile
+							user={user}
+							setUser={setUser}
+							setCurrentPage={setCurrentPage}
+						/>
+					)}
+					{currentPage === "edit" && <Edit questions={questions} />}
+					{currentPage === "view" && (
+						<View questions={questions} user={user} />
+					)}
+					{currentPage === "login" && (
+						<Login
+							setCurrentPage={setCurrentPage}
+							getUser={getUser}
+						/>
+					)}
+					{currentPage === "signup" && (
+						<Signup
+							currentPage={currentPage}
+							setCurrentPage={setCurrentPage}
+							getUser={getUser}
+						/>
 					)}
 				</div>
 			</div>
