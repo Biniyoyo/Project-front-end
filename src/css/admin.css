@@ -1,0 +1,15 @@
+.user{
+   text-align: center;
+   margin-top: 60px;
+}
+.totalUser{
+    margin-top: 20px;
+    font-weight: 700;
+    font-size: larger;
+    text-align: center;
+}
+.deleteUser{
+    background-color: rgb(255, 0, 0);
+    width: 20%;
+    height: 15%;
+}

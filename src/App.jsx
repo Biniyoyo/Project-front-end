@@ -9,12 +9,16 @@ import Edit from "./components/Edit";
 import Profile from "./components/Profile";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import AdminNav from "./components/AdminNav";
+import Admin from "./components/Admin";
 import { getUserAPI, getQuestionsAPI } from "./api/client";
 
 function App() {
 	// States
 
 	const [user, setUser] = useState(null);
+	const [admin, setAdmin] = useState(null);
+	const [allUsers, setAllUsers] = useState([]);
 	const [currentPage, setCurrentPage] = useState("");
 	const [date, setDate] = useState("");
 	const [questions, setQuestions] = useState([]);
@@ -120,6 +124,15 @@ function App() {
 									currentPage={currentPage}
 									setCurrentPage={setCurrentPage}
 									getUser={getUser}
+								/>
+							)}
+							
+							{/* temporary */}
+							{currentPage === "admin" && (
+								<Admin 
+									allUsers={allUsers} 
+									admin = {admin}
+									setAllUsers = {setAllUsers}
 								/>
 							)}
 						</>
