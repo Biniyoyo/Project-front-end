@@ -11,6 +11,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import AdminNav from "./components/AdminNav";
 import Admin from "./components/Admin";
+import AdminLogin from "./components/AdminLogin";
 import { getUserAPI, getQuestionsAPI } from "./api/client";
 
 function App() {
@@ -126,7 +127,13 @@ function App() {
 									getUser={getUser}
 								/>
 							)}
-							
+							{currentPage === "adminlogin" && (
+								<AdminLogin
+									currentPage={currentPage}
+									setCurrentPage={setCurrentPage}
+									getUser={getUser}
+								/>
+							)}
 							{/* temporary */}
 							{currentPage === "admin" && (
 								<Admin 

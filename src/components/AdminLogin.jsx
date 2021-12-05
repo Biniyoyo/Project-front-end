@@ -1,9 +1,8 @@
 import "../css/login.css";
 import { loginAPI } from "../api/client";
 import { useState } from "react";
-
-function Login(props) {
-	const { setCurrentPage, getUser } = props;
+function AdminLogin(props){
+    const { setCurrentPage, getUser } = props;
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
@@ -33,11 +32,11 @@ function Login(props) {
 		}
 	};
 
-	return (
+ return (
 		<div className="login-layout" data-testid="login">
 			<div className="board">
 				<div className="loginHead">
-					<h2 style={{ margin: 0, color: "white" }}>Log Day</h2>
+					<h2 style={{ margin: 0, color: "white" }}>Admin Login</h2>
 				</div>
 
 				<div className="loginHtml">
@@ -65,20 +64,13 @@ function Login(props) {
 						>
 							{isFetching ? "Wait..." : "Log In"}
 						</button>
-						<hr style={{ width: "inherit" }} />
-
-						<p
-							className="creatnewaccountButton"
-							onClick={() => setCurrentPage("adminlogin")}
-						>
-							Click here for Admin login
-						</p>
+                        <hr style={{ width: "inherit" }} />
 
 						<button
 							className="creatnewaccountButton"
-							onClick={() => setCurrentPage("signup")}
+							onClick={() => setCurrentPage("login")}
 						>
-							Create New Account
+							Go back to user login
 						</button>
 					</div>
 				</div>
@@ -86,5 +78,4 @@ function Login(props) {
 		</div>
 	);
 }
-
-export default Login;
+export default AdminLogin;
