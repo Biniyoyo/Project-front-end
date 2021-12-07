@@ -120,7 +120,7 @@ function Profile(props) {
 							id="chooseNewProfile"
 							accept="image/*"
 							onChange={handleImageSelected}
-							style={{ display: "none" }}
+							hidden={true}
 						/>
 						<img
 							className="profileImage"
@@ -136,7 +136,8 @@ function Profile(props) {
 							id="chooseNewProfile"
 							accept="image/*"
 							onChange={handleImageSelected}
-							style={{ display: "none", cursor: "pointer" }}
+							hidden={true}
+							style={{ cursor: "pointer" }}
 						/>
 						<div className="chooseNewImage">Choose New Image</div>
 					</label>

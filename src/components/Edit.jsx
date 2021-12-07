@@ -17,15 +17,26 @@ function Edit(props) {
 		// TODO: edittingQuetions에서 status tag 확인해서 체크
 		edittingQuestions.forEach((q, i) => {
 			if (q?.status === "new") {
-				createQuestionAPI(q);
+				createQuestionAPI(q).then(res => {
+					if (i == edittingQuestions.length - 1) {
+						window.alert("Saved!");
+						getQuestions();
+					}
+				});
 			} else if (q?.status === "editted") {
-				updateQuestionAPI(q);
+				updateQuestionAPI(q).then(res => {
+					if (i == edittingQuestions.length - 1) {
+						window.alert("Saved!");
+						getQuestions();
+					}
+				});
 			} else if (q?.status === "deleted") {
-				deleteQuestionByIdAPI(q?._id);
-			}
-			if (i == edittingQuestions.length - 1) {
-				window.alert("Saved!");
-				getQuestions();
+				deleteQuestionByIdAPI(q?._id).then(res => {
+					if (i == edittingQuestions.length - 1) {
+						window.alert("Saved!");
+						getQuestions();
+					}
+				});
 			}
 		});
 	};

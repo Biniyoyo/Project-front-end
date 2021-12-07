@@ -59,9 +59,14 @@ function View(props) {
 					responses: responses,
 				};
 			})
-			.forEach(q => createQuestionAPI(q));
-		window.alert("Successfully imported!");
-		getQuestions();
+			.forEach((q, i) =>
+				createQuestionAPI(q).then(res => {
+					if (i == Object.values(uniqueData).length - 1) {
+						window.alert("Successfully imported!");
+						getQuestions();
+					}
+				})
+			);
 	};
 
 	const papaparseOptions = {
@@ -376,9 +381,10 @@ function View(props) {
 							style={{ display: "none" }}
 						/> */}
 						<CSVReader
-							inputStyle={{ display: "none" }}
-							cssClass="react-csv-input"
-							// label="Import"
+							// inputStyle={{ display: "none" }}
+							// cssInputClass={{ hidden: true }}
+							// cssClass="react-csv-input"
+							label="Import"
 							onFileLoaded={importData}
 							parserOptions={papaparseOptions}
 						/>
