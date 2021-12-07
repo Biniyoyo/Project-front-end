@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
 	LineChart,
 	Line,
@@ -14,12 +14,14 @@ import {
 	Tooltip,
 	ResponsiveContainer,
 } from "recharts";
+import Logday from "./Logday";
 import { CSVLink } from "react-csv";
 import DownloadSharpIcon from "@mui/icons-material/DownloadSharp";
 import "../css/view.css";
 
 function View(props) {
-	const { questions, user } = props;
+	const { questions, setQuestions, user } = props;
+	const [viewMode, setViewMode] = useState("by-question");
 
 	const sortByDate = arr => {
 		return arr.sort(function (a, b) {
@@ -123,7 +125,7 @@ function View(props) {
 					</div>
 					<div
 						style={{
-							overflowX: "auto",
+							overflow: "hidden",
 							marginTop: "20px",
 							width: "100%",
 							height: 300,
@@ -152,16 +154,30 @@ function View(props) {
 	};
 
 	const booleanTypeCard = question => {
-		const COLORS = ["red", "black"];
+		const COLORS = ["#66bfbf", "#f76b8a"];
 		const RADIAN = Math.PI / 180;
-		const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+		const renderCustomizedLabel = ({
+			cx,
+			cy,
+			midAngle,
+			innerRadius,
+			outerRadius,
+			percent,
+			index,
+		}) => {
 			const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
 			const x = cx + radius * Math.cos(-midAngle * RADIAN);
 			const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
 			return (
-				<text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-				{`${(percent * 100).toFixed(0)}%`}
+				<text
+					x={x}
+					y={y}
+					fill="white"
+					textAnchor={x > cx ? "start" : "end"}
+					dominantBaseline="central"
+				>
+					{`${(percent * 100).toFixed(0)}%`}
 				</text>
 			);
 		};
@@ -187,7 +203,7 @@ function View(props) {
 					</div>
 					<div
 						style={{
-							overflowX: "auto",
+							overflow: "hidden",
 							marginTop: "20px",
 							width: "100%",
 							height: 300,
@@ -205,36 +221,31 @@ function View(props) {
 								<Bar dataKey="value" fill="#f76b8a" />
 							</BarChart> */}
 							<PieChart width={400} height={400}>
-									<Pie
-										data={data}
-										cx="50%"
-										cy="50%"
-										labelLine={false}
-										label={renderCustomizedLabel}
-										outerRadius={80}
-										fill="#8884d8"
-										dataKey="value"
-									>
-										{data.map((entry, index) => (
-											<>
-												<Cell
-													dataKey={`cell-${index}`}
-													fill={COLORS[index % COLORS.length]}/>
-											</>
-										))}
-									</Pie>
-									<Legend 
-										payload={
-											data.map(
-											  (item, index) => ({
-												type: "square",
-												value: `${item.bool}`,
-												color: COLORS[index % COLORS.length]
-											  })
-											)
-										  }
-									/>
-									
+								<Pie
+									data={data}
+									cx="50%"
+									cy="50%"
+									labelLine={false}
+									label={renderCustomizedLabel}
+									outerRadius={80}
+									fill="#8884d8"
+									dataKey="value"
+								>
+									{data.map((entry, index) => (
+										<Cell
+											key={`cell-${index}`}
+											dataKey={`cell-${index}`}
+											fill={COLORS[index % COLORS.length]}
+										/>
+									))}
+								</Pie>
+								<Legend
+									payload={data.map((item, index) => ({
+										type: "square",
+										value: `${item.bool}`,
+										color: COLORS[index % COLORS.length],
+									}))}
+								/>
 							</PieChart>
 						</ResponsiveContainer>
 					</div>
@@ -270,7 +281,7 @@ function View(props) {
 					</div>
 					<div
 						style={{
-							overflowX: "auto",
+							overflow: "hidden",
 							marginTop: "20px",
 							width: "100%",
 							height: 300,
@@ -304,47 +315,64 @@ function View(props) {
 					paddingLeft: "5px",
 					paddingRight: "5px",
 					paddingTop: "10px",
-					paddingBottom: "10px",
+					// paddingBottom: "10px",
 				}}
 			>
 				<h3 style={{ fontWeight: 900 }}>View Data</h3>
 
 				{csvDownloadButton()}
 			</div>
-
-			{questions.length > 0 ? (
-				questions.map(question => {
-					switch (question.questionType) {
-						case "text":
-							return (
-								<div key={`view${question._id}`}>
-									{textTypeCard(question)}
-								</div>
-							);
-						case "number":
-							return (
-								<div key={`view${question._id}`}>
-									{numberTypeCard(question)}
-								</div>
-							);
-						case "boolean":
-							return (
-								<div key={`view${question._id}`}>
-									{booleanTypeCard(question)}
-								</div>
-							);
-						case "multiple":
-							return (
-								<div key={`view${question._id}`}>
-									{multipleTypeCard(question)}
-								</div>
-							);
-					}
-				})
+			<div style={{ marginBottom: "10px" }}>
+				<select
+					className="select"
+					value={viewMode}
+					onChange={e => setViewMode(e.currentTarget.value)}
+				>
+					<option value="by-question">By question</option>
+					<option value="by-date">By date</option>
+				</select>
+			</div>
+			{viewMode === "by-question" ? (
+				questions.length > 0 ? (
+					questions.map(question => {
+						switch (question.questionType) {
+							case "text":
+								return (
+									<div key={`view${question._id}`}>
+										{textTypeCard(question)}
+									</div>
+								);
+							case "number":
+								return (
+									<div key={`view${question._id}`}>
+										{numberTypeCard(question)}
+									</div>
+								);
+							case "boolean":
+								return (
+									<div key={`view${question._id}`}>
+										{booleanTypeCard(question)}
+									</div>
+								);
+							case "multiple":
+								return (
+									<div key={`view${question._id}`}>
+										{multipleTypeCard(question)}
+									</div>
+								);
+						}
+					})
+				) : (
+					<div style={{ textAlign: "center" }}>
+						<b>No Data to Show!</b>
+					</div>
+				)
 			) : (
-				<div style={{ textAlign: "center" }}>
-					<b>No Data to Show!</b>
-				</div>
+				<Logday
+					questions={questions}
+					setQuestions={setQuestions}
+					disabled
+				/>
 			)}
 		</div>
 	);

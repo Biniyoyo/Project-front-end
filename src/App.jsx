@@ -21,19 +21,9 @@ function App() {
 	const [admin, setAdmin] = useState(null);
 	const [allUsers, setAllUsers] = useState([]);
 	const [currentPage, setCurrentPage] = useState("");
-	const [date, setDate] = useState("");
+
 	const [questions, setQuestions] = useState([]);
 	const [isFetching, setIsFetching] = useState(false);
-
-	//current date format
-
-	const getToday = () => {
-		let day = new Date();
-		let year = day.getFullYear();
-		let month = day.getMonth() + 1;
-		let d = day.getDate();
-		return month + "/" + d + "/" + year;
-	};
 
 	//fetch
 	const getUser = async () => {
@@ -60,7 +50,6 @@ function App() {
 
 	useEffect(() => {
 		getUser();
-		setDate(getToday());
 	}, []);
 
 	return (
@@ -94,9 +83,6 @@ function App() {
 						<>
 							{currentPage === "logday" && (
 								<Logday
-									date={date}
-									setDate={setDate}
-									getToday={getToday}
 									questions={questions}
 									setQuestions={setQuestions}
 								/>
@@ -112,7 +98,11 @@ function App() {
 								<Edit questions={questions} />
 							)}
 							{currentPage === "view" && (
-								<View questions={questions} user={user} />
+								<View
+									questions={questions}
+									setQuestions={setQuestions}
+									user={user}
+								/>
 							)}
 							{currentPage === "login" && (
 								<Login
@@ -136,10 +126,10 @@ function App() {
 							)}
 							{/* temporary */}
 							{currentPage === "admin" && (
-								<Admin 
-									allUsers={allUsers} 
-									admin = {admin}
-									setAllUsers = {setAllUsers}
+								<Admin
+									allUsers={allUsers}
+									admin={admin}
+									setAllUsers={setAllUsers}
 								/>
 							)}
 						</>

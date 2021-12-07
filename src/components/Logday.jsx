@@ -6,9 +6,10 @@ import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutl
 import { updateQuestionAPI } from "../api/client";
 
 function Logday(props) {
-	const { date, setDate, getToday, questions, setQuestions } = props;
+	const { questions, setQuestions, disabled } = props;
 	const [edittingQuestions, setEdittingQuestions] = useState([]);
 	const [edittedQuestions, setEdittedQuestions] = useState([]);
+	const [date, setDate] = useState("");
 
 	const incrementDate = (dateInput, increment) => {
 		const dateFormatTotime = new Date(dateInput);
@@ -23,6 +24,14 @@ function Logday(props) {
 			"/" +
 			increasedDate.getFullYear();
 		setDate(date);
+	};
+
+	const getToday = () => {
+		let day = new Date();
+		let year = day.getFullYear();
+		let month = day.getMonth() + 1;
+		let d = day.getDate();
+		return month + "/" + d + "/" + year;
 	};
 
 	const editResponse = (q, newResponse) => {
@@ -58,6 +67,7 @@ function Logday(props) {
 								value={true}
 								checked={q.responses[date] === true}
 								onChange={() => editResponse(q, true)}
+								disabled={disabled}
 							/>
 							<label htmlFor={`${q?._id}boolean-t`}>True</label>
 							<span style={{ margin: "20px" }}></span>
@@ -68,6 +78,7 @@ function Logday(props) {
 								value={false}
 								checked={q.responses[date] === false}
 								onChange={() => editResponse(q, false)}
+								disabled={disabled}
 							/>
 							<label htmlFor={`${q?._id}boolean-f`}>False</label>
 						</div>
@@ -81,6 +92,7 @@ function Logday(props) {
 						type="text"
 						value={q.responses[date] || ""}
 						onChange={e => editResponse(q, e.currentTarget.value)}
+						disabled={disabled}
 					/>
 				);
 
@@ -91,6 +103,7 @@ function Logday(props) {
 						className="number-response-input"
 						value={q.responses[date] || ""}
 						onChange={e => editResponse(q, e.currentTarget.value)}
+						disabled={disabled}
 					/>
 				);
 
@@ -114,6 +127,7 @@ function Logday(props) {
 							value={idx}
 							checked={q?.responses[date] == idx}
 							onChange={e => editResponse(q, idx)}
+							disabled={disabled}
 						/>
 						<label htmlFor={`${q?._id}multiple${idx}`}>
 							{choice}
@@ -129,6 +143,10 @@ function Logday(props) {
 		setEdittedQuestions([]);
 		setEdittingQuestions(questions);
 	}, [date, questions]);
+
+	useEffect(() => {
+		setDate(getToday());
+	}, []);
 
 	return (
 		<>
@@ -157,11 +175,13 @@ function Logday(props) {
 							{questionRendering(q)}
 						</div>
 					))}
-					<div className="down">
-						<button className="save-button" onClick={submit}>
-							Submit
-						</button>
-					</div>
+					{!disabled && (
+						<div className="down">
+							<button className="save-button" onClick={submit}>
+								Submit
+							</button>
+						</div>
+					)}
 				</>
 			) : (
 				<div style={{ textAlign: "center" }}>
