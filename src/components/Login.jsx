@@ -25,8 +25,8 @@ function Login(props) {
 						getUser();
 					} else {
 						setError("Entered information is wrong");
-						setIsFetching(false);
 					}
+					setIsFetching(false);
 				});
 			}
 		}

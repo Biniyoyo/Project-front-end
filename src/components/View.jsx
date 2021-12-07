@@ -25,6 +25,7 @@ import "../css/view.css";
 function View(props) {
 	const { questions, setQuestions, getQuestions, user } = props;
 	const [viewMode, setViewMode] = useState("by-question");
+	const [isFetching, setIsFetching] = useState(false);
 
 	const sortByDate = arr => {
 		return arr.sort(function (a, b) {
@@ -42,7 +43,7 @@ function View(props) {
 				];
 			}
 		});
-
+		setIsFetching(true);
 		Object.values(uniqueData)
 			.map(lst => {
 				let responses = {};
@@ -62,6 +63,7 @@ function View(props) {
 			.forEach((q, index) => {
 				createQuestionAPI(q).then(res => {
 					if (index == Object.keys(uniqueData).length - 1) {
+						setIsFetching(false);
 						window.alert("Successfully imported!");
 						getQuestions();
 					}
@@ -371,18 +373,11 @@ function View(props) {
 					{csvDownloadButton()}
 
 					<label className="export-import-button">
-						{/* <input
-							type="file"
-							name="csv"
-							id="chooseImportFile"
-							accept=".csv"
-							onChange={importCSV}
-							style={{ display: "none" }}
-						/> */}
 						<CSVReader
 							inputStyle={{ display: "none" }}
 							onFileLoaded={importData}
 							parserOptions={papaparseOptions}
+							disabled={isFetching}
 						/>
 						Import
 						<DownloadSharpIcon fontSize="small" />

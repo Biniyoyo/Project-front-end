@@ -11,6 +11,7 @@ import {
 function Edit(props) {
 	const { questions, getQuestions } = props;
 	const [edittingQuestions, setEdittingQuestions] = useState([]);
+	const [isFetching, setIsFetching] = useState(false);
 	// status tag => ["new", "editted", "deleted"]
 
 	const save = () => {
@@ -22,11 +23,13 @@ function Edit(props) {
 				q?.status === "deleted"
 		).length;
 		let count = 0;
+		setIsFetching(true);
 		edittingQuestions.forEach((q, index) => {
 			if (q?.status === "new") {
 				createQuestionAPI(q).then(res => {
 					count += 1;
 					if (count == modifiedCount) {
+						setIsFetching(false);
 						window.alert("Saved!");
 						getQuestions();
 					}
@@ -35,6 +38,7 @@ function Edit(props) {
 				updateQuestionAPI(q).then(res => {
 					count += 1;
 					if (count == modifiedCount) {
+						setIsFetching(false);
 						window.alert("Saved!");
 						getQuestions();
 					}
@@ -43,6 +47,7 @@ function Edit(props) {
 				deleteQuestionByIdAPI(q?._id).then(res => {
 					count += 1;
 					if (count == modifiedCount) {
+						setIsFetching(false);
 						window.alert("Saved!");
 						getQuestions();
 					}
@@ -231,8 +236,11 @@ function Edit(props) {
 			))}
 			{edittingQuestions.length > 0 && (
 				<div className="down">
-					<button className="save-button" onClick={save}>
-						Save
+					<button
+						className="save-button"
+						onClick={isFetching ? () => {} : save}
+					>
+						{isFetching ? "Wait..." : "Save"}
 					</button>
 				</div>
 			)}

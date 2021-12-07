@@ -33,8 +33,8 @@ function Signup(props) {
 							getUser();
 						} else if (res === "duplicated") {
 							setError("User email is already registered");
-							setIsFetching(false);
 						}
+						setIsFetching(false);
 					});
 				}
 			}
