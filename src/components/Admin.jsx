@@ -23,7 +23,7 @@ function Admin() {
 			user?.questions.forEach(question =>
 				deleteQuestionByIdAPI(question._id)
 			);
-			deleteUserByIdAPI(user?._id);
+			deleteUserByIdAPI(user?._id).then(res => getUsers());
 		}
 	};
 

@@ -92,12 +92,16 @@ function App() {
 								/>
 							)}
 							{currentPage === "edit" && (
-								<Edit questions={questions} />
+								<Edit
+									questions={questions}
+									getQuestions={getQuestions}
+								/>
 							)}
 							{currentPage === "view" && (
 								<View
 									questions={questions}
 									setQuestions={setQuestions}
+									getQuestions={getQuestions}
 									user={user}
 								/>
 							)}

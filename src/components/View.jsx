@@ -23,7 +23,7 @@ import UploadSharpIcon from "@mui/icons-material/UploadSharp";
 import "../css/view.css";
 
 function View(props) {
-	const { questions, setQuestions, user } = props;
+	const { questions, setQuestions, getQuestions, user } = props;
 	const [viewMode, setViewMode] = useState("by-question");
 
 	const sortByDate = arr => {
@@ -61,7 +61,7 @@ function View(props) {
 			})
 			.forEach(q => createQuestionAPI(q));
 		window.alert("Successfully imported!");
-		window.location.reload();
+		getQuestions();
 	};
 
 	const papaparseOptions = {

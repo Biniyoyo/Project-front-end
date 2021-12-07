@@ -9,13 +9,13 @@ import {
 } from "../api/client";
 
 function Edit(props) {
-	const { questions } = props;
+	const { questions, getQuestions } = props;
 	const [edittingQuestions, setEdittingQuestions] = useState([]);
 	// status tag => ["new", "editted", "deleted"]
 
 	const save = () => {
 		// TODO: edittingQuetions에서 status tag 확인해서 체크
-		edittingQuestions.forEach(q => {
+		edittingQuestions.forEach((q, i) => {
 			if (q?.status === "new") {
 				createQuestionAPI(q);
 			} else if (q?.status === "editted") {
@@ -23,9 +23,11 @@ function Edit(props) {
 			} else if (q?.status === "deleted") {
 				deleteQuestionByIdAPI(q?._id);
 			}
+			if (i == edittingQuestions.length - 1) {
+				window.alert("Saved!");
+				getQuestions();
+			}
 		});
-		window.alert("Saved!");
-		window.location.reload();
 	};
 
 	const addQuestion = () => {
