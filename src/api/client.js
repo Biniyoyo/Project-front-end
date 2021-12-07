@@ -125,9 +125,7 @@ export const createQuestionAPI = question => {
 		...defaultHeaders,
 		method: "POST",
 		body: JSON.stringify(question),
-	})
-		.then(checkStatus)
-		.then(parseJSON);
+	}).then(checkStatus);
 };
 
 export const updateQuestionAPI = question => {

@@ -15,24 +15,34 @@ function Edit(props) {
 
 	const save = () => {
 		// TODO: edittingQuetions에서 status tag 확인해서 체크
-		edittingQuestions.forEach((q, i) => {
+		const modifiedCount = edittingQuestions.filter(
+			q =>
+				q?.status === "new" ||
+				q?.status === "editted" ||
+				q?.status === "deleted"
+		).length;
+		let count = 0;
+		edittingQuestions.forEach((q, index) => {
 			if (q?.status === "new") {
 				createQuestionAPI(q).then(res => {
-					if (i == edittingQuestions.length - 1) {
+					count += 1;
+					if (count == modifiedCount) {
 						window.alert("Saved!");
 						getQuestions();
 					}
 				});
 			} else if (q?.status === "editted") {
 				updateQuestionAPI(q).then(res => {
-					if (i == edittingQuestions.length - 1) {
+					count += 1;
+					if (count == modifiedCount) {
 						window.alert("Saved!");
 						getQuestions();
 					}
 				});
 			} else if (q?.status === "deleted") {
 				deleteQuestionByIdAPI(q?._id).then(res => {
-					if (i == edittingQuestions.length - 1) {
+					count += 1;
+					if (count == modifiedCount) {
 						window.alert("Saved!");
 						getQuestions();
 					}
