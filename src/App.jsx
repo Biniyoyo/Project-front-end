@@ -11,13 +11,13 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 
 import Admin from "./components/Admin";
-import { getUserAPI, getQuestionsAPI } from "./api/client";
+import { getUserAPI, getUsersAPI, getQuestionsAPI } from "./api/client";
 
 function App() {
 	// States
 
 	const [user, setUser] = useState(null);
-
+	const [allUsers, setAllUsers] = useState([]);
 	const [currentPage, setCurrentPage] = useState("");
 
 	const [questions, setQuestions] = useState([]);
@@ -28,11 +28,20 @@ function App() {
 		getUserAPI().then(res => {
 			setUser(res);
 			if (res) {
+				if (res?.isAdmin) {
+					getAllUsers();
+				}
 				setCurrentPage("logday");
 				getQuestions();
 			} else {
 				setCurrentPage("login");
 			}
+		});
+	};
+
+	const getAllUsers = async () => {
+		getUsersAPI().then(res => {
+			setAllUsers(res);
 		});
 	};
 
@@ -118,7 +127,12 @@ function App() {
 									getUser={getUser}
 								/>
 							)}
-							{currentPage === "admin" && <Admin />}
+							{currentPage === "admin" && (
+								<Admin
+									getAllUsers={getAllUsers}
+									allUsers={allUsers}
+								/>
+							)}
 						</>
 					)}
 				</div>

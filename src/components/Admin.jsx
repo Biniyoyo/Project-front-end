@@ -1,29 +1,15 @@
 import { useState, useEffect } from "react";
-import {
-	getUsersAPI,
-	deleteUserByIdAPI,
-	deleteQuestionByIdAPI,
-} from "../api/client";
+import { deleteUserByIdAPI, deleteQuestionByIdAPI } from "../api/client";
 import "../css/admin.css";
-function Admin() {
-	const [users, setUsers] = useState([]);
-
-	const getUsers = async () => {
-		getUsersAPI().then(res => {
-			setUsers(res);
-		});
-	};
-
-	useEffect(() => {
-		getUsers();
-	}, []);
+function Admin(props) {
+	const { getAllUsers, allUsers } = props;
 
 	const deleteUser = user => {
 		if (window.confirm(`Do you want to delete user ${user?.userName}?`)) {
 			user?.questions.forEach(question =>
 				deleteQuestionByIdAPI(question._id)
 			);
-			deleteUserByIdAPI(user?._id).then(res => getUsers());
+			deleteUserByIdAPI(user?._id).then(res => getAllUsers());
 		}
 	};
 
@@ -41,10 +27,10 @@ function Admin() {
 			>
 				<h3 style={{ fontWeight: 900 }}>Admin Page</h3>
 
-				<div className="totalUser">Total Users: {users.length}</div>
+				<div className="totalUser">Total Users: {allUsers.length}</div>
 			</div>
 
-			{users.map(user => (
+			{allUsers.map(user => (
 				<div className="middle" key={`user-${user?._id}`}>
 					<div className="user">
 						<div>
