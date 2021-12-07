@@ -34,6 +34,18 @@ export const getUserAPI = () => {
 	});
 };
 
+export const getUsersAPI = () => {
+	return fetch(`${SERVER_URL}/api/users`, {
+		...defaultHeaders,
+	}).then(response => {
+		if (response.status >= 400) {
+			return null;
+		} else {
+			return parseJSON(response);
+		}
+	});
+};
+
 export const updateUserAPI = user => {
 	return fetch(`${SERVER_URL}/api/user`, {
 		...defaultHeaders,
@@ -46,6 +58,15 @@ export const updateUserAPI = user => {
 			email: user?.email,
 		}),
 	}).then(checkStatus);
+};
+
+export const deleteUserByIdAPI = userId => {
+	return fetch(`${SERVER_URL}/api/user/${userId}`, {
+		...defaultHeaders,
+		method: "DELETE",
+	})
+		.then(checkStatus)
+		.then(parseJSON);
 };
 
 export const registerAPI = (userName, email, password) => {

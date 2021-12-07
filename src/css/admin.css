@@ -1,15 +1,21 @@
-.user{
-   text-align: center;
-   margin-top: 60px;
+.user {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
-.totalUser{
-    margin-top: 20px;
-    font-weight: 700;
-    font-size: larger;
-    text-align: center;
+.totalUser {
+	margin-top: 0;
+	font-weight: 600;
 }
-.deleteUser{
-    background-color: rgb(255, 0, 0);
-    width: 20%;
-    height: 15%;
+.deleteUser {
+	background-color: rgb(255, 38, 0);
+	color: white;
+	font-size: small;
+	border-radius: 3px;
+	/* padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 10px;
+	padding-bottom: 10px; */
+	border: none;
+	cursor: pointer;
 }

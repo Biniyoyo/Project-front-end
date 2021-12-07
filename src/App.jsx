@@ -9,17 +9,15 @@ import Edit from "./components/Edit";
 import Profile from "./components/Profile";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import AdminNav from "./components/AdminNav";
+
 import Admin from "./components/Admin";
-import AdminLogin from "./components/AdminLogin";
 import { getUserAPI, getQuestionsAPI } from "./api/client";
 
 function App() {
 	// States
 
 	const [user, setUser] = useState(null);
-	const [admin, setAdmin] = useState(null);
-	const [allUsers, setAllUsers] = useState([]);
+
 	const [currentPage, setCurrentPage] = useState("");
 
 	const [questions, setQuestions] = useState([]);
@@ -28,7 +26,6 @@ function App() {
 	//fetch
 	const getUser = async () => {
 		getUserAPI().then(res => {
-			console.log(res);
 			setUser(res);
 			if (res) {
 				setCurrentPage("logday");
@@ -42,7 +39,6 @@ function App() {
 	const getQuestions = async () => {
 		setIsFetching(true);
 		getQuestionsAPI().then(newQuestions => {
-			console.log(newQuestions);
 			setQuestions(newQuestions);
 			setIsFetching(false);
 		});
@@ -59,6 +55,7 @@ function App() {
 					profilePic={user?.image || "/profile.png"}
 					currentPage={currentPage}
 					setCurrentPage={setCurrentPage}
+					isAdmin={user?.isAdmin}
 				/>
 			)}
 
@@ -117,21 +114,7 @@ function App() {
 									getUser={getUser}
 								/>
 							)}
-							{currentPage === "adminlogin" && (
-								<AdminLogin
-									currentPage={currentPage}
-									setCurrentPage={setCurrentPage}
-									getUser={getUser}
-								/>
-							)}
-							{/* temporary */}
-							{currentPage === "admin" && (
-								<Admin
-									allUsers={allUsers}
-									admin={admin}
-									setAllUsers={setAllUsers}
-								/>
-							)}
+							{currentPage === "admin" && <Admin />}
 						</>
 					)}
 				</div>

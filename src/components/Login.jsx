@@ -20,7 +20,6 @@ function Login(props) {
 				setError("");
 				setIsFetching(true);
 				loginAPI(email, password).then(res => {
-					console.log(res);
 					if (res === "success") {
 						window.alert("Welcome!");
 						getUser();
@@ -66,13 +65,6 @@ function Login(props) {
 							{isFetching ? "Wait..." : "Log In"}
 						</button>
 						<hr style={{ width: "inherit" }} />
-
-						<p
-							className="creatnewaccountButton"
-							onClick={() => setCurrentPage("adminlogin")}
-						>
-							Click here for Admin login
-						</p>
 
 						<button
 							className="creatnewaccountButton"

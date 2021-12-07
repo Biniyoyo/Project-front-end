@@ -15,8 +15,13 @@
 ## Demo
 
 -   Demo account
+
     -   email: demo@demo.com
     -   password: Demo1234
+
+-   Admin account
+    -   email: admin@admin.com
+    -   password: Admin1234
 
 ## Structure
 

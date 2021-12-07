@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { createQuestionAPI } from "../api/client";
 import {
 	LineChart,
 	Line,
@@ -16,7 +17,9 @@ import {
 } from "recharts";
 import Logday from "./Logday";
 import { CSVLink } from "react-csv";
+import CSVReader from "react-csv-reader";
 import DownloadSharpIcon from "@mui/icons-material/DownloadSharp";
+import UploadSharpIcon from "@mui/icons-material/UploadSharp";
 import "../css/view.css";
 
 function View(props) {
@@ -29,9 +32,49 @@ function View(props) {
 		});
 	};
 
+	const importData = (data, fileInfo) => {
+		let uniqueData = {};
+		data.forEach(item => {
+			if (questions.filter(q => q._id == item.questionID).length == 0) {
+				uniqueData[item.questionID] = [
+					...(uniqueData[item.questionID] || []),
+					item,
+				];
+			}
+		});
+
+		Object.values(uniqueData)
+			.map(lst => {
+				let responses = {};
+				lst.forEach(obj => (responses[obj.date] = obj.response || ""));
+				return {
+					questionType: lst[0].type,
+					questionText: lst[0].question,
+					multipleChoice: [
+						lst[0].mult1 || "",
+						lst[0].mult2 || "",
+						lst[0].mult3 || "",
+					],
+					createdDate: lst[0].createdDate,
+					responses: responses,
+				};
+			})
+			.forEach(q => createQuestionAPI(q));
+		window.alert("Successfully imported!");
+		window.location.reload();
+	};
+
+	const papaparseOptions = {
+		header: true,
+		dynamicTyping: true,
+		skipEmptyLines: true,
+		// transformHeader: header => header.toLowerCase().replace(/\W/g, "_"),
+	};
+
 	const csvDownloadButton = () => {
 		let data = [];
 		const headers = [
+			{ label: "questionID", key: "questionID" },
 			{ label: "date", key: "date" },
 			{ label: "createdDate", key: "createdDate" },
 			{ label: "question", key: "question" },
@@ -44,6 +87,7 @@ function View(props) {
 		questions.forEach(question =>
 			sortByDate(Object.keys(question?.responses)).forEach(response =>
 				data.push({
+					questionID: question._id,
 					date: response,
 					createdDate: question.createdDate,
 					question: question.questionText,
@@ -60,17 +104,17 @@ function View(props) {
 				headers={headers}
 				data={data}
 				filename={`logday_export_${user?._id}.csv`}
-				className="export"
 				onClick={() => {
 					return window.confirm(
 						"Do you want to export data as .csv file?"
 					);
 				}}
+				style={{ textDecoration: "none", marginRight: "10px" }}
 			>
-				<DownloadSharpIcon
-					style={{ cursor: "pointer" }}
-					fontSize="medium"
-				/>
+				<div className="export-import-button">
+					Export
+					<UploadSharpIcon fontSize="small" />
+				</div>
 			</CSVLink>
 		);
 	};
@@ -319,8 +363,29 @@ function View(props) {
 				}}
 			>
 				<h3 style={{ fontWeight: 900 }}>View Data</h3>
+				<div style={{ display: "flex" }}>
+					{csvDownloadButton()}
 
-				{csvDownloadButton()}
+					<label className="export-import-button">
+						{/* <input
+							type="file"
+							name="csv"
+							id="chooseImportFile"
+							accept=".csv"
+							onChange={importCSV}
+							style={{ display: "none" }}
+						/> */}
+						<CSVReader
+							inputStyle={{ display: "none" }}
+							cssClass="react-csv-input"
+							// label="Import"
+							onFileLoaded={importData}
+							parserOptions={papaparseOptions}
+						/>
+						Import
+						<DownloadSharpIcon fontSize="small" />
+					</label>
+				</div>
 			</div>
 			<div style={{ marginBottom: "10px" }}>
 				<select

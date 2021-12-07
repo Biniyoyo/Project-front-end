@@ -1,59 +1,81 @@
-import { AllInclusiveSharp } from "@mui/icons-material";
-import "../css/admin.css"
-function Admin(props){
-    const {allUsers, setAllUsers, admin} = props;
+import { useState, useEffect } from "react";
+import {
+	getUsersAPI,
+	deleteUserByIdAPI,
+	deleteQuestionByIdAPI,
+} from "../api/client";
+import "../css/admin.css";
+function Admin() {
+	const [users, setUsers] = useState([]);
 
-    //will be replaced by allUsers
-    const users = [
-        {
-            name:"user1",
-            email:"user1@com",
-            totalQuestion:10,
-            numberOfResponses:8
+	const getUsers = async () => {
+		getUsersAPI().then(res => {
+			setUsers(res);
+		});
+	};
 
-        },
-        {
-            name:"user2",
-            email:"user2@com",
-            totalQuestion:7,
-            numberOfResponses:2
+	useEffect(() => {
+		getUsers();
+	}, []);
 
-        },
-        {
-            name:"user3",
-            email:"user3@com",
-            totalQuestion:13,
-            numberOfResponses:8
+	const deleteUser = user => {
+		if (window.confirm(`Do you want to delete user ${user?.userName}?`)) {
+			user?.questions.forEach(question =>
+				deleteQuestionByIdAPI(question._id)
+			);
+			deleteUserByIdAPI(user?._id);
+		}
+	};
 
-        }
-    ]
+	return (
+		<>
+			<div
+				style={{
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "space-between",
+					paddingLeft: "5px",
+					paddingRight: "5px",
+					paddingTop: "10px",
+				}}
+			>
+				<h3 style={{ fontWeight: 900 }}>Admin Page</h3>
 
-    const deleteUserButton = (n)=>{
-        console.log(n);
-    }
+				<div className="totalUser">Total Users: {users.length}</div>
+			</div>
 
-    return (
-        <>
-        <div className="totalUser">Total Users: {users.length}</div>
-        {users.map((u)=>(
-            <>
-            <div className="user">
-                <div>Name of user: {u.name}</div>
-                <div>Email of user: {u.email}</div>
-                <div>Total number of questions: {u.totalQuestion}</div>
-                <div>Total number of responses: {u.numberOfResponses}</div>
-                <br></br>
-                <button 
-                    className="deleteUser"
-                    onClick = {deleteUserButton(u.name)}
-                    > 
-                        Delete {u.name}
-                </button>
-            
-            </div>
-            </>
-        ))}
-        </>
-    );
+			{users.map(user => (
+				<div className="middle" key={`user-${user?._id}`}>
+					<div className="user">
+						<div>
+							<div>User name: {user?.userName}</div>
+							<div>Email: {user?.email}</div>
+							<div>
+								Total number of questions:{" "}
+								{user?.questions.length}
+							</div>
+							<div>
+								Total number of responses:{" "}
+								{user?.questions
+									.map(
+										question =>
+											Object.keys(question?.responses)
+												.length
+									)
+									.reduce((a, b) => a + b, 0)}
+							</div>
+						</div>
+
+						<button
+							className="deleteUser"
+							onClick={() => deleteUser(user)}
+						>
+							Delete
+						</button>
+					</div>
+				</div>
+			))}
+		</>
+	);
 }
 export default Admin;

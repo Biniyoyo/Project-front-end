@@ -2,7 +2,7 @@ import React from "react";
 import "../css/navbar.css";
 
 function Navbar(props) {
-	const { profilePic, currentPage, setCurrentPage } = props;
+	const { profilePic, currentPage, setCurrentPage, isAdmin } = props;
 
 	const titleStyle = {
 		color: "#66bfbf",
@@ -30,6 +30,20 @@ function Navbar(props) {
 						View Data
 					</div>
 				</h4>
+				{isAdmin && (
+					<h4
+						onClick={() => setCurrentPage("admin")}
+						className="link"
+					>
+						<div
+							style={{
+								...(currentPage === "admin" && titleStyle),
+							}}
+						>
+							Admin Page
+						</div>
+					</h4>
+				)}
 			</div>
 			<img
 				className="profileImage"
