@@ -87,7 +87,7 @@ function App() {
 					)}
 					{isFetching || (
 						<>
-							{currentPage === "logday" && (
+							{currentPage === "logday" && !user.isAdmin && (
 								<Logday
 									questions={questions}
 									setQuestions={setQuestions}
