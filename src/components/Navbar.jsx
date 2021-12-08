@@ -13,27 +13,25 @@ function Navbar(props) {
 		<div className="navbar">
 			<h2 className="title">Day Logger</h2>
 			<div className="links">
-				{!isAdmin && (
-					<>
-					<h4 onClick={() => setCurrentPage("logday")} className="link">
-						<div
-							style={{ ...(currentPage === "logday" && titleStyle) }}
-						>
-							Log Day
-						</div>
-					</h4>
-				
-					<h4 onClick={() => setCurrentPage("edit")} className="link">
-						<div style={{ ...(currentPage === "edit" && titleStyle) }}>
-							Edit Questions
-						</div>
-					</h4><h4 onClick={() => setCurrentPage("view")} className="link">
-							<div style={{ ...(currentPage === "view" && titleStyle) }}>
-								View Data
-							</div>
-						</h4>
-						</>
-				)}
+				<h4 onClick={() => setCurrentPage("logday")} className="link">
+					<div
+						style={{ ...(currentPage === "logday" && titleStyle) }}
+					>
+						Log Day
+					</div>
+				</h4>
+
+				<h4 onClick={() => setCurrentPage("edit")} className="link">
+					<div style={{ ...(currentPage === "edit" && titleStyle) }}>
+						Edit Questions
+					</div>
+				</h4>
+				<h4 onClick={() => setCurrentPage("view")} className="link">
+					<div style={{ ...(currentPage === "view" && titleStyle) }}>
+						View Data
+					</div>
+				</h4>
+
 				{isAdmin && (
 					<h4
 						onClick={() => setCurrentPage("admin")}
