@@ -2,6 +2,14 @@
 
 ## Quick Start
 
+## Deploying 
+    Frontend: hosted in netlify
+    Backend: hosted in heroku
+    Database: Mongodb-atlas
+    Images: Cloudinary
+    
+    Link for app: cse316finalproject.netlify.app
+
 ### Start on localhost:3000 server
 
 1. `yarn install` or `npm install` to install packages
@@ -22,6 +30,8 @@
 -   Admin account
     -   email: admin@admin.com
     -   password: Admin1234
+## Test
+    - npm test
 
 ## Structure
 
