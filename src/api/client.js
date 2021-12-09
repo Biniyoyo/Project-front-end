@@ -34,6 +34,21 @@ export const getUserAPI = () => {
 	});
 };
 
+export const checkDuplicatedUserByEmailAPI = email => {
+	return fetch(`${SERVER_URL}/api/user`, {
+		...defaultHeaders,
+		method: "POST",
+		body: JSON.stringify({
+			email: email,
+		}),
+	}).then(response => {
+		if (response.status >= 400) {
+			return "duplicated";
+		}
+		return "success";
+	});
+};
+
 export const getUsersAPI = () => {
 	return fetch(`${SERVER_URL}/api/users`, {
 		...defaultHeaders,
@@ -133,7 +148,12 @@ export const updateQuestionAPI = question => {
 		...defaultHeaders,
 		method: "PUT",
 		body: JSON.stringify(question),
-	}).then(checkStatus);
+	}).then(response => {
+		if (response.status >= 400) {
+			return "duplicated";
+		}
+		return "success";
+	});
 };
 
 export const deleteQuestionByIdAPI = questionId => {

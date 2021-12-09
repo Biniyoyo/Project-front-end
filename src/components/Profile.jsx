@@ -4,6 +4,7 @@ import {
 	logoutAPI,
 	uploadImageToCloudinaryAPI,
 	updateUserAPI,
+	checkDuplicatedUserByEmailAPI,
 } from "../api/client";
 
 function Profile(props) {
@@ -53,32 +54,50 @@ function Profile(props) {
 			if (edittingUser?.userName.length < 1) {
 				setError("name");
 			} else {
-				setError("");
 				setIsFetching(true);
-				if (image) {
-					const formData = new FormData();
-					const unsignedUploadPreset = "g53pwqfw";
-					formData.append("file", image);
-					formData.append("upload_preset", unsignedUploadPreset);
+				checkDuplicatedUserByEmailAPI(edittingUser?.email).then(
+					duplicateResult => {
+						console.log(duplicateResult);
+						if (duplicateResult == "success") {
+							setError("");
+							if (image) {
+								const formData = new FormData();
+								const unsignedUploadPreset = "g53pwqfw";
+								formData.append("file", image);
+								formData.append(
+									"upload_preset",
+									unsignedUploadPreset
+								);
 
-					uploadImageToCloudinaryAPI(formData).then(response => {
-						console.log("Upload success");
-						updateUserAPI({
-							...edittingUser,
-							image: response.url,
-						}).then(res => {
-							setUser({ ...edittingUser, image: response.url });
+								uploadImageToCloudinaryAPI(formData).then(
+									response => {
+										console.log("Upload success");
+										updateUserAPI({
+											...edittingUser,
+											image: response.url,
+										}).then(res => {
+											setUser({
+												...edittingUser,
+												image: response.url,
+											});
+											setIsFetching(false);
+											window.alert("Saved!");
+										});
+									}
+								);
+							} else {
+								updateUserAPI({ ...edittingUser }).then(res => {
+									setUser({ ...edittingUser });
+									setIsFetching(false);
+									window.alert("Saved!");
+								});
+							}
+						} else {
+							setError("email");
 							setIsFetching(false);
-							window.alert("Saved!");
-						});
-					});
-				} else {
-					updateUserAPI({ ...edittingUser }).then(res => {
-						setUser({ ...edittingUser });
-						setIsFetching(false);
-						window.alert("Saved!");
-					});
-				}
+						}
+					}
+				);
 			}
 		}
 	};

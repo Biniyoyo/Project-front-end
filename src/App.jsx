@@ -40,6 +40,7 @@ function App() {
 	};
 
 	const getAllUsers = async () => {
+		"";
 		getUsersAPI().then(res => {
 			setAllUsers(res);
 		});
