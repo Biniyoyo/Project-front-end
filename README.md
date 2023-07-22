@@ -1,4 +1,4 @@
-# CSE316 Final Project - Frontend
+# Project - Frontend
 
 ## Quick Start
 
